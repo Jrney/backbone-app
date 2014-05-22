@@ -105,6 +105,21 @@ module.exports = function(grunt) {
         },
 
         // ------------------------------------------------------------
+        // LESS compilation.
+        // ------------------------------------------------------------
+
+        less: {
+            development: {
+                options: {
+
+                },
+                files: {
+                    "app/css/app.css" : "app/css/less/style.less"
+                },
+            },
+        },
+
+        // ------------------------------------------------------------
         // JSHint
         // ------------------------------------------------------------
 
@@ -160,7 +175,14 @@ module.exports = function(grunt) {
                 }
             },
             options: {
-                livereload: false
+                livereload: true
+            },
+            styles: {
+                files: ["app/css/less/**/*.less"],
+                tasks: ["less"],
+                options: {
+                    spawn: false
+                }
             },
         },
 
@@ -186,7 +208,7 @@ module.exports = function(grunt) {
     // Task: Build
     // ------------------------------------------------------------
 
-    grunt.registerTask('build', ['clean:dist', 'copy:dist', 'requirejs']);
+    grunt.registerTask('build', ['clean:dist', 'copy:dist', 'requirejs', 'less']);
 
     // ------------------------------------------------------------
     // Task: Test

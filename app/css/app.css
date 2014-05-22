@@ -1,0 +1,381 @@
+/*VARIABLES*/
+/*--------------------------------------------------------------------------------*/
+/*-- Colors --*/
+/*-- Fonts --*/
+/*-- General Variables --*/
+/*--  --*/
+/*MIXINS*/
+/*--------------------------------------------------------------------------------*/
+.Font {
+  font-family: sans-serif;
+}
+/*
+--------------------------------------------------------------
+Min - Width: 31.3125em
+--------------------------------------------------------------
+*/
+/*
+--------------------------------------------------------------
+Min - Width: 58.75em
+--------------------------------------------------------------
+*/
+/*TYPOGRAPHY*/
+/*--------------------------------------------------------------------------------------------------*/
+body {
+  font-size: 16px;
+  font-family: sans-serif;
+  color: #3d3d3d;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+p {
+  font-family: sans-serif;
+  font-size: 1em;
+}
+a,
+a:visited {
+  color: ;
+  text-decoration: none;
+  -webkit-transition: all 0.5s linear;
+  -moz-transition: all 0.5s linear;
+  -o-transition: all 0.5s linear;
+  -ms-transition: all 0.5s linear;
+  transition: all 0.5s linear;
+}
+blockquote {
+  font-size: 1.5em;
+  font-weight: normal;
+  color: ;
+  position: relative;
+}
+blockquote:before {
+  font-family: Georgia, serif;
+  display: block;
+  content: "\201C";
+  font-size: 80px;
+  position: absolute;
+  left: -35px;
+  top: -20px;
+  color: #7a7a7a;
+}
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+img {
+  height: auto;
+  max-width: 100%;
+}
+/* Fix for FlexSlider */
+.flexslider .slides img {
+  height: auto;
+}
+.lighter {
+  font-weight: lighter;
+}
+.small {
+  font-size: 70%;
+}
+.italic {
+  font-style: italic;
+}
+.center {
+  text-align: center;
+}
+.caps {
+  text-transform: uppercase!important;
+}
+.under {
+  text-decoration: underline;
+}
+.bold {
+  font-weight: bold;
+}
+.normal {
+  font-weight: normal;
+}
+.right_text {
+  text-align: right;
+}
+.left_text {
+  text-align: left;
+}
+/*BODY STYLES*/
+/*--------------------------------------------------------------------------------------------------*/
+body {
+  margin: 0;
+  padding: 50px 0 0;
+  background-color: #ffffff;
+  min-height: 100%;
+}
+.homepage {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(../images/usa-map.png) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+.group:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+* HTML .clearfix {
+  height: 1%;
+}
+.group {
+  display: block;
+}
+#goTop {
+  position: fixed;
+  bottom: 0.25em;
+  right: 0.25em;
+  color: rgba(0, 128, 0, 0.4);
+  font-size: 3em;
+  z-index: 9999;
+}
+#goTop:hover {
+  border: none;
+  color: rgba(0, 128, 0, 0.7);
+}
+.embed-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 30px;
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+  height: auto;
+}
+.embed-container iframe,
+.embed-container object,
+.embed-container embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+/*Containers*/
+/*--------------------------------------------------------------------------------*/
+.wrapper {
+  margin: 1em auto 0;
+  padding: 0;
+  width: 100%;
+  max-width: 75em;
+  background: #ffffff;
+}
+.wrapperHome {
+  margin: 0 auto 0;
+  padding: 0;
+  width: 100%;
+  max-width: 75em;
+  background: #ffffff;
+}
+#main {
+  margin: 0 auto;
+  width: 96%;
+  padding: 0 2%;
+  max-width: 75em;
+}
+/*Tablet*/
+/*--------------------------------------------------------------------------------*/
+/* END min-width : 501px */
+/*Desktop*/
+/*--------------------------------------------------------------------------------*/
+/* END min-width : 901px */
+/*Special Cases*/
+/*--------------------------------------------------------------------------------*/
+/* END min-width : 1050px */
+/*HEADER*/
+/*--------------------------------------------------------------------------------------------------*/
+/*Mobile*/
+/*--------------------------------------------------------------------------------*/
+/*Tablet*/
+/*--------------------------------------------------------------------------------*/
+/* END min-width : 501px */
+/*Desktop*/
+/*--------------------------------------------------------------------------------*/
+/* END min-width : 901px */
+/*Special Cases*/
+/*--------------------------------------------------------------------------------*/
+@media only screen and (min-width: 48em) {
+  .navForm .form-group {
+    width: 40%;
+    height: 50px;
+  }
+  .navForm .form-group label {
+    line-height: 50px;
+    color: #ffffff;
+    margin-right: 0.5em;
+    width: 25%;
+  }
+  .navForm .form-group select {
+    width: 65%;
+  }
+}
+/* END min-width : 768px */
+/*MOBILE*/
+/*--------------------------------------------------------------------------------------------------*/
+/*Home Page*/
+/*--------------------------------------------------------------------------------*/
+.homepageForm {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  width: 90%;
+  height: auto;
+  padding: 20px;
+  background: red;
+  color: white;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+}
+.homepageForm a {
+  margin: 0 auto;
+  display: block;
+  width: 8em;
+}
+/*Map Page*/
+/*--------------------------------------------------------------------------------*/
+.pageHeader {
+  padding: 2em 1em;
+  text-align: center;
+}
+.categoryButtons,
+.pitstopButton {
+  padding: 2em 0;
+}
+.pitstopButton p {
+  font-weight: bold;
+}
+#map_canvas {
+  width: 100%;
+  height: 600px;
+}
+.sidebar h3 {
+  margin: 0.5em 0;
+}
+.sidebar ul {
+  padding-left: 1em;
+}
+.sidebar ul li a {
+  font-size: 1.125em;
+}
+/*Pitstop Page*/
+/*--------------------------------------------------------------------------------*/
+.mapButton {
+  text-align: right;
+  padding: 2em 0;
+}
+.detailsContainer img {
+  display: inline-block;
+  vertical-align: top;
+  width: 48%;
+  margin: 0 3% 1em 0;
+}
+.detailsContainer img:nth-child(odd) {
+  margin-right: 0;
+}
+/*FORM STYLES*/
+/*--------------------------------------------------------------------------------------------------*/
+/*Footer*/
+/*--------------------------------------------------------------------------------------------------*/
+/*Mobile*/
+/*--------------------------------------------------------------------------------*/
+footer {
+  padding: 4em 0 1em;
+}
+/*Tablet*/
+/*--------------------------------------------------------------------------------*/
+/* END min-width : 501px */
+/*Desktop*/
+/*--------------------------------------------------------------------------------*/
+/* END min-width : 901px */
+/*Special Cases*/
+/*--------------------------------------------------------------------------------*/
+/* END min-width : 1050px */
+/*
+--------------------------------------------------------------
+Media Queries Aplenty
+--------------------------------------------------------------
+*/
+/*
+--------------------------------------------------------------
+Min - Width: 31.3125em
+--------------------------------------------------------------
+*/
+/*Tablet*/
+/*--------------------------------------------------------------------------------------------------*/
+/*Tablet*/
+/*--------------------------------------------------------------------------------*/
+@media only screen and (min-width: 31.3125em) {
+  /*Home Page*/
+  /*--------------------------------------------------------------------------------*/
+  .homepageForm {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: auto;
+    padding: 20px;
+    background: red;
+    color: white;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+  }
+}
+/* END min-width : 501px */
+/*
+--------------------------------------------------------------
+Min - Width: 56.3125em
+--------------------------------------------------------------
+*/
+/*Desktop*/
+/*--------------------------------------------------------------------------------------------------*/
+/*Desktop*/
+/*--------------------------------------------------------------------------------*/
+@media only screen and (min-width: 56.3125em) {
+  /*Pitstop Page*/
+  /*--------------------------------------------------------------------------------*/
+  .detailsContainer img {
+    display: inline-block;
+    vertical-align: top;
+    width: 30%;
+    margin: 0 3% 1em 0;
+  }
+  .detailsContainer img:nth-child(odd) {
+    margin-right: 3%;
+  }
+  .detailsContainer img:nth-child(3n+3) {
+    margin-right: 0;
+  }
+}
+/* END min-width : 901px */
+/* END min-width : 801px */
+/*
+--------------------------------------------------------------
+Min - Width: 75.0625em
+--------------------------------------------------------------
+*/
+/*Print Styles*/
+/*--------------------------------------------------------------------------------------------------*/
