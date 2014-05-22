@@ -12,3 +12,5 @@ Starting point for the Code Fellows "Along the Way" group project.
 * LESS
 * MongoDB
 * Mongoose
+
+See branches for development progress.
