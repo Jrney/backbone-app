@@ -1,0 +1,125 @@
+.Font {font-family: sans-serif;}
+
+.BorderRadius (@radius: 5px) {
+    border-radius: @radius @radius @radius @radius;
+    -moz-border-radius: @radius @radius @radius @radius;
+    -webkit-border-radius: @radius @radius @radius @radius;
+}
+.BorderRadiusCustom (@topleft: 5px, @topright: 5px, @bottomleft: 5px, @bottomright: 5px) {
+    -webkit-border-radius: @topleft @topright @bottomright @bottomleft;
+    -moz-border-radius: @topleft @topright @bottomright @bottomleft;
+    border-radius: @topleft @topright @bottomright @bottomleft;
+}
+.BoxShadow (@x: 0px, @y: 3px, @blur: 5px, @alpha: 0.5) {
+    -webkit-box-shadow: @x @y @blur rgba(0, 0, 0, @alpha);
+    -moz-box-shadow: @x @y @blur rgba(0, 0, 0, @alpha);
+    box-shadow: @x @y @blur rgba(0, 0, 0, @alpha);
+}
+
+.Gradient (@origin: left, @start: #ffffff, @stop: #000000) {
+    background-color: @start;
+    background-image: -webkit-linear-gradient(@origin, @start, @stop);
+    background-image: -moz-linear-gradient(@origin, @start, @stop);
+    background-image: -o-linear-gradient(@origin, @start, @stop);
+    background-image: -ms-linear-gradient(@origin, @start, @stop);
+    background-image: linear-gradient(@origin, @start, @stop);
+}
+.GradientQuick (@origin: left, @alpha: 0.2) {
+    background-image: -webkit-linear-gradient(@origin, rgba(0,0,0,0.0), rgba(0,0,0,@alpha));
+    background-image: -moz-linear-gradient(@origin, rgba(0,0,0,0.0), rgba(0,0,0,@alpha));
+    background-image: -o-linear-gradient(@origin, rgba(0,0,0,0.0), rgba(0,0,0,@alpha));
+    background-image: -ms-linear-gradient(@origin, rgba(0,0,0,0.0), rgba(0,0,0,@alpha));
+    background-image: linear-gradient(@origin, rgba(0,0,0,0.0), rgba(0,0,0,@alpha));
+}
+.Gutters (@width, @top, @sides) {
+    width: @width;
+    padding: @top @sides;
+}
+.Input (@height: 40px; @borderColor: @bodyColor;) {
+    height: @height;
+    .BorderRadius(5px);
+    border:1px solid @borderColor;
+    vertical-align: top;
+}
+.Pad (@padding){padding:@padding;}
+
+.StandardButton (@backgroundColor, @font: @bodyFont, @color: @bodyColor, @width: 100%) {
+    vertical-align: bottom;
+    margin: 0 ((100 - @width)/2);
+    color: @bodyColor;
+    a {
+        font: @font;
+        background-color: @backgroundColor;
+        color: @bodyColor;
+        .BorderRadius(5px);
+        height: 40px;
+        display: inline-block;
+        line-height: 40px;
+        width: 90%;
+        max-width: 18.75em;
+        padding: 0 5%;
+        margin-bottom: .125em;
+        &:active, &:hover {
+            background-color: lighten(@color, 10%);
+        }
+        &:active i[class^="icon"], &:hover i[class^="icon"] {
+            color: @bodyColor;
+        }
+        i[class^="icon"] {
+            color: @bodyColor;
+            font-size: 0.75em;
+            margin-right: 0.625em;
+            display: inline-block;
+            line-height: 1.5em;
+            width: 1.5em;
+        }
+    }
+}
+.TextShadow (@x: 1px, @y: 1px, @b: 1px, @color) {
+    text-shadow: @x @y @b @color;
+}
+.Transform (@rotate: 90deg, @scale: 1, @skew: 1deg, @translate: 10px) {
+    -webkit-transform: rotate(@rotate) scale(@scale) skew(@skew) translate(@translate);
+    -moz-transform: rotate(@rotate) scale(@scale) skew(@skew) translate(@translate);
+    -o-transform: rotate(@rotate) scale(@scale) skew(@skew) translate(@translate);
+    -ms-transform: rotate(@rotate) scale(@scale) skew(@skew) translate(@translate);
+    transform: rotate(@rotate) scale(@scale) skew(@skew) translate(@translate);
+}
+.Transition (@prop: all, @time: 0.5s, @ease: linear) {
+    -webkit-transition: @prop @time @ease;
+    -moz-transition: @prop @time @ease;
+    -o-transition: @prop @time @ease;
+    -ms-transition: @prop @time @ease;
+    transition: @prop @time @ease;
+}
+
+
+/*
+--------------------------------------------------------------
+Min - Width: 31.3125em
+--------------------------------------------------------------
+*/
+
+
+
+/*
+--------------------------------------------------------------
+Min - Width: 58.75em
+--------------------------------------------------------------
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
