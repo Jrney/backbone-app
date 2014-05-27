@@ -5,24 +5,23 @@
 (function () {
     require.config({
 
-        baseUrl: "js/vendor",
-
-        shim: {
-            "jquery": {
-                exports: "$",
-            },
-        },
-
         map: {},
 
         paths: {
             // vendor libraries
-            "underscore": "lodash.underscore",
-            "hbs": "hbs/hbs",
+            "jquery": "vendor/jquery",
+            "underscore": "vendor/lodash.underscore",
+            "hbs": "vendor/hbs/hbs",
 
             // application libraries
-            "app": "../app"
+            // "app": "app",
+            "simple": "app/simple",
+            "scripts": "app/scripts"
 
         }
+    });
+    require(['scripts'], function(){});
+    require(['simple'], function(){
+        console.log("inside of simple require function");
     });
 }());

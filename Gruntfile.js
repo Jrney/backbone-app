@@ -15,6 +15,7 @@ module.exports = function(grunt) {
 
         bowerPath: "bower_components",
         vendorPath: "app/js/vendor",
+        appPath: "app/js/app",
         distPath: "app/dist",
 
         //-------------------------------------------------------------
@@ -95,11 +96,11 @@ module.exports = function(grunt) {
         requirejs: {
             app: {
                 options: {
-                    name: "app/app",
-                    baseUrl: "app/js/vendor",
+                    name: "config",
+                    baseUrl: "app/js",
                     mainConfigFile: "app/js/config.js",
                     out: "<%= distPath %>/public.js",
-                    optimize: "uglify2"
+                    optimize: "none"
                 }
             }
         },
@@ -208,7 +209,7 @@ module.exports = function(grunt) {
     // Task: Build
     // ------------------------------------------------------------
 
-    grunt.registerTask('build', ['clean:dist', 'copy:dist', 'requirejs', 'less']);
+    grunt.registerTask('build', ['clean:vendor', 'copy:vendor', 'clean:dist', 'copy:dist', 'requirejs', 'less']);
 
     // ------------------------------------------------------------
     // Task: Test

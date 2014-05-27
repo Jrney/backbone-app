@@ -1,4 +1,6 @@
+define(["jquery"], function($) {
 
+console.log("frodo in the define");
 windowState = 'large';
 
   var iPhoneFlag = false;
@@ -6,8 +8,8 @@ windowState = 'large';
     iPhoneFlag = true;
   }
 
-$(document).ready(function(){
-    
+
+    console.log("blibo has been loaded in");
 /*
  * Screen Width Button (for development only. Located in the head)
  */
@@ -16,10 +18,10 @@ $(document).ready(function(){
             width : $(window).width(),
             height : $(window).height()
         };
-        
+
         var width = viewport.width;
         var height = viewport.height;
-        
+
         alert("width: " + width);
     });
 
@@ -28,7 +30,7 @@ $(document).ready(function(){
     if( iPhoneFlag ) {
         console.log('bilbo is here');
         var mohi_url = "comgooglemaps://?center=37.713924,-122.187849&zoom=14&views=traffic";
-        
+
         $('#mohi_map').attr("href", mohi_url);
     }
 
@@ -52,7 +54,7 @@ $(document).ready(function(){
      * @description Call different functions based on screen width
      */
     //variable to hold the current window state - small, medium, or large
-      
+
     //check initial width of the screen
       var sw = document.body.clientWidth;
       if (sw < 501){
@@ -72,9 +74,8 @@ $(document).ready(function(){
       $('#foodButton').on('click', function(e) {
         e.preventDefault();
         drop();
-      }); 
+      });
 
-}); //End document.ready
 
 //take care of window resizing
   $(window).resize(function(){
@@ -83,7 +84,7 @@ $(document).ready(function(){
       smPage();
     }
     if(sw >= 501 && sw <= 900 && windowState != 'medium'){
-      medPage();    
+      medPage();
     }
     if(sw >= 901 && windowState != 'large'){
       lgPage();
@@ -92,7 +93,7 @@ $(document).ready(function(){
 
 /**
  *@description Calls smPage() on screen width less than 31.3135em
- * 
+ *
  */
 function smPage() {
     console.log('small page');
@@ -101,7 +102,7 @@ function smPage() {
 
 /**
  * @description Calls medPage() on screen width greater than 31.25em and less than 50em
- * 
+ *
  */
 function medPage() {
     console.log('medium page');
@@ -109,12 +110,12 @@ function medPage() {
     windowState = 'medium';
 }
  /**
-  * @description Calls lgPage() on screen width greater than 901px. 
-  * 
+  * @description Calls lgPage() on screen width greater than 901px.
+  *
   */
 function lgPage() {
     console.log('large page');
-    
+
     windowState = 'large';
 }
 
@@ -163,8 +164,8 @@ function addMarker() {
   iterator++;
 }
 
-google.maps.event.addDomListener(window, 'load', initialize);
-
+//google.maps.event.addDomListener(window, 'load', initialize);
+initialize();
 // function loadScript() {
 //   var script = document.createElement("script");
 //   script.type = "text/javascript";
@@ -172,7 +173,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 //   document.body.appendChild(script);
 // }
 
-
+});// end define for require.js
 
 
 

@@ -1,18 +1,48 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+        <meta name="apple-mobile-web-app-capable" content="yes">
         <title>Jrney</title>
+        <!-- Icons -->
+        <link rel="shortcut icon" type="image/x-icon" href="/images/icons/favicon.ico" >
+        <link rel="apple-touch-icon-precomposed" href="/images/icons/apple-touch-icon-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/icons/apple-touch-icon-72x72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/icons/apple-touch-icon-114x114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/icons/apple-touch-icon-144x144-precomposed.png">
         <!-- Stylesheets -->
         <link rel="stylesheet" href="js/vendor/bootstrap/css/bootstrap.css">
         <link rel="stylesheet" href="css/app.css">
         <link rel="stylesheet" href="js/vendor/bootstrap/css/bootstrap-theme.css">
     </head>
-    <body>
-
-    <div class="container">
-        <h1>Bilbo loves Express!</h1>
-    </div>
-
+    <body class="homepage">
+        <form class="form-horizontal homepageForm" role="form">
+            <div class="form-group">
+                <label for="startingSelect" class="col-sm-3 control-label">Origin</label>
+                <div class="col-sm-9">
+                    <select name="startingSelect" class="form-control">
+                        <option value="Seattle">Seattle</option>
+                        <option value="Portland">Portland</option>
+                        <option value="Yakima">Yakima</option>
+                        <option value="MtVernon">Mt. Vernon</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="endingSelect" class="col-sm-3 control-label">Finish</label>
+                <div class="col-sm-9">
+                    <select name="endingSelect" class="form-control">
+                        <option value="Seattle">Seattle</option>
+                        <option value="Portland">Portland</option>
+                        <option value="Yakima">Yakima</option>
+                        <option value="MtVernon">Mt. Vernon</option>
+                    </select>
+                </div>
+            </div>
+            <a href="/map.html" class="btn btn-primary">Embark</a>
+        </form>
         <script data-main="dist/public.js" src="dist/require.js"></script>
     </body>
 </html>
