@@ -1,15 +1,13 @@
-define([
-    "jquery",
-    "backbone",
-    "scripts",
-    "hbs!app/templates/map",
-    "json2"
-], function(
-    $,
-    Backbone
-) {
-    "use strict";
-}
+var $ = require('jquery');
+var Backbone = require('backbone');
+var _ = require('underscore');
+Backbone.$ = $;
 
+var MapView = require('views/mapsView');
 
-);
+$(function() {
+    console.log("samwise in mapView");
+    var mapView = new MapView();
+
+    $('#mapView').append(mapView.$el);
+});

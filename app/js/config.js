@@ -12,16 +12,16 @@
             "jquery": "vendor/jquery",
             "underscore": "vendor/lodash.underscore",
             "hbs": "vendor/hbs/hbs",
+            "async": "vendor/async",
+            "google": "google",
 
             // application libraries
-            // "app": "app",
-            "simple": "app/simple",
-            "scripts": "app/scripts"
+            "app": "app",
+            "scripts": "app/scripts",
+            "maps": "app/customMaps"
 
         }
     });
     require(['scripts'], function(){});
-    require(['simple'], function(){
-        console.log("inside of simple require function");
-    });
+    require(['maps'], function(){});
 }());

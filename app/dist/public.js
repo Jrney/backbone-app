@@ -9310,6 +9310,66 @@ function lgPage() {
     windowState = 'large';
 }
 
+
+
+});// end define for require.js
+
+
+
+
+
+
+
+
+;
+/** @license
+ * RequireJS plugin for async dependency load like JSONP and Google Maps
+ * Author: Miller Medeiros
+ * Version: 0.1.1 (2011/11/17)
+ * Released under the MIT license
+ */
+define('async',[],function(){
+
+    var DEFAULT_PARAM_NAME = 'callback',
+        _uid = 0;
+
+    function injectScript(src){
+        var s, t;
+        s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = src;
+        t = document.getElementsByTagName('script')[0]; t.parentNode.insertBefore(s,t);
+    }
+
+    function formatUrl(name, id){
+        var paramRegex = /!(.+)/,
+            url = name.replace(paramRegex, ''),
+            param = (paramRegex.test(name))? name.replace(/.+!/, '') : DEFAULT_PARAM_NAME;
+        url += (url.indexOf('?') < 0)? '?' : '&';
+        return url + param +'='+ id;
+    }
+
+    function uid() {
+        _uid += 1;
+        return '__async_req_'+ _uid +'__';
+    }
+
+    return{
+        load : function(name, req, onLoad, config){
+            if(config.isBuild){
+                onLoad(null); //avoid errors on the optimizer
+            }else{
+                var id = uid();
+                //create a global variable that stores onLoad so callback
+                //function can define new module after async load
+                window[id] = onLoad;
+                injectScript(formatUrl(name, id));
+            }
+        }
+    };
+});
+
+
+define('maps',['async!https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'], function() {
+
 /**
  * @description loading the google maps api
  *  - use with the div id '#map_canvas'
@@ -9364,20 +9424,8 @@ initialize();
 //   document.body.appendChild(script);
 // }
 
-});// end define for require.js
 
-
-
-
-
-
-
-
-;
-define('simple',['jquery'], function($) {
-    console.log("anytime now require");
-    $('body').append("<div>What the hell?</div>");
-});
+});// end require.js define;
 /**
  * RequireJS configuration
  */
@@ -9392,18 +9440,18 @@ define('simple',['jquery'], function($) {
             "jquery": "vendor/jquery",
             "underscore": "vendor/lodash.underscore",
             "hbs": "vendor/hbs/hbs",
+            "async": "vendor/async",
+            "google": "google",
 
             // application libraries
-            // "app": "app",
-            "simple": "app/simple",
-            "scripts": "app/scripts"
+            "app": "app",
+            "scripts": "app/scripts",
+            "maps": "app/customMaps"
 
         }
     });
     require(['scripts'], function(){});
-    require(['simple'], function(){
-        console.log("inside of simple require function");
-    });
+    require(['maps'], function(){});
 }());
 define("config", function(){});
 

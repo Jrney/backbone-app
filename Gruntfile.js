@@ -46,6 +46,7 @@ module.exports = function(grunt) {
                             "json2/json2.js",
                             "backbone/backbone.js",
                             "backbone.localStorage/backbone.localStorage.js",
+                            "requirejs-plugins/src/async.js",
 
                             // Test libraries.
                             "mocha/mocha.js",
