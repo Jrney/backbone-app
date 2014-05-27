@@ -14,7 +14,7 @@
         width: 90%;
         height: auto;
 
-        padding: 20px;  
+        padding: 20px;
         background: red;
         color: white;
         box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
@@ -40,7 +40,7 @@
     p {
         font-weight: bold;
     }
-    
+
 }
 #map_canvas {
     width: 100%;
@@ -81,6 +81,18 @@
         }
     }
 
+}
+.item {
+    width: 12em;
+    margin: 5px;
+    height: 16em;
+    background: #9098db;
+    border: 2px solid @black;
+    display: inline-block;
+    vertical-align: top;
+    &:nth-child(4n + 4) {
+        margin-right: 0;
+    }
 }
 
 

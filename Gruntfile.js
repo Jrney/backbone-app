@@ -47,6 +47,7 @@ module.exports = function(grunt) {
                             "backbone/backbone.js",
                             "backbone.localStorage/backbone.localStorage.js",
                             "requirejs-plugins/src/async.js",
+                            "isotope/dist/isotope.pkgd.js",
 
                             // Test libraries.
                             "mocha/mocha.js",

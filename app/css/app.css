@@ -292,6 +292,18 @@ body {
 .detailsContainer img:nth-child(odd) {
   margin-right: 0;
 }
+.item {
+  width: 12em;
+  margin: 5px;
+  height: 16em;
+  background: #9098db;
+  border: 2px solid #232323;
+  display: inline-block;
+  vertical-align: top;
+}
+.item:nth-child(4n + 4) {
+  margin-right: 0;
+}
 /*FORM STYLES*/
 /*--------------------------------------------------------------------------------------------------*/
 /*Footer*/

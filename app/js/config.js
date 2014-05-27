@@ -14,14 +14,19 @@
             "hbs": "vendor/hbs/hbs",
             "async": "vendor/async",
             "google": "google",
+            "isotope": "vendor/isotope.pkgd",
+            "backbone": "vendor/backbone",
 
             // application libraries
-            "app": "app",
+            "client": "app/app",
             "scripts": "app/scripts",
-            "maps": "app/customMaps"
+            "maps": "app/customMaps",
+            "pitstopsView": "app/views/pitstopsView"
+
 
         }
     });
     require(['scripts'], function(){});
-    require(['maps'], function(){});
+    require(['client'], function(){});
+    //require(['maps'], function(){});
 }());

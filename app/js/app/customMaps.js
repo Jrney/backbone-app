@@ -1,4 +1,4 @@
-define(['async!https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'], function() {
+define(['jquery'], function() {
 
 /**
  * @description loading the google maps api
