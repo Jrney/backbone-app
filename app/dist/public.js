@@ -24705,8 +24705,8 @@ define('app/views/pitstopCollectionView',[
         render: function() {
             this.$el.html(this.template());
             var $items = this.$("#pitstopsContainer");
-            this.collection.each(function(model) {
-                var pitstopView = new PitstopsView({
+            this.collection.each(function (model) {
+                var pitstopView = new PitstopView({
                     model: model,
                     render: function() {
                         this.$el.html(this.template(this.model.toJSON()));
@@ -24898,12 +24898,23 @@ define('app/routes/routes',[
     var PitstopRouter = Backbone.Router.extend({
         routes: {
             "" : "index",
-            "map" : "map.html"
+            "map" : "map",
         },
         start: function() {
             Backbone.history.start();
         },
         initialize: function() {
+            this.collection = new Backbone.Collection;
+            this.collection.reset(fakeGoogleJson);
+
+            this.pitstopView = new PitstopCollectionView({
+                collection: this.collection
+            });
+        },
+        index: function() {
+
+        },
+        map: function() {
             this.collection = new Backbone.Collection;
             this.collection.reset(fakeGoogleJson);
 
@@ -24928,7 +24939,6 @@ define('client',[
     PitstopView,
     PitstopRouter
 ) {
-
     //ISOTOPE
     var iso = new Isotope ("#container", {
         itemSelector: '.item',
@@ -24937,12 +24947,10 @@ define('client',[
             columnWidth: 25
         }
     });
-
     $(function() {
         var router = new PitstopRouter();
         router.start();
     });
-
 });
 /**
  * RequireJS configuration

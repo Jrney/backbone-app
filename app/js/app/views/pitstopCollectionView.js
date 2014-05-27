@@ -15,8 +15,8 @@ define([
         render: function() {
             this.$el.html(this.template());
             var $items = this.$("#pitstopsContainer");
-            this.collection.each(function(model) {
-                var pitstopView = new PitstopsView({
+            this.collection.each(function (model) {
+                var pitstopView = new PitstopView({
                     model: model,
                     render: function() {
                         this.$el.html(this.template(this.model.toJSON()));

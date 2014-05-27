@@ -175,12 +175,23 @@ define([
     var PitstopRouter = Backbone.Router.extend({
         routes: {
             "" : "index",
-            "map" : "map.html"
+            "map" : "map",
         },
         start: function() {
             Backbone.history.start();
         },
         initialize: function() {
+            this.collection = new Backbone.Collection;
+            this.collection.reset(fakeGoogleJson);
+
+            this.pitstopView = new PitstopCollectionView({
+                collection: this.collection
+            });
+        },
+        index: function() {
+
+        },
+        map: function() {
             this.collection = new Backbone.Collection;
             this.collection.reset(fakeGoogleJson);
 
