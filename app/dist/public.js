@@ -24790,18 +24790,97 @@ define('app/views/indexView',[
     });
     return IndexView;
 });
+define('app/models/mapModel',['backbone'], function(Backbone) {
+    var mapModel = Backbone.Model.extend({
+        default: {
+            center: {},
+            position: {},
+            currentLatLng: {},
+            mapTypeId: {},
+            zoom: 4,
+            mapOptions: {},
+            route: '',
+        },
+        initMap: function(center) {
+            this.set('center', center);
+            var currentLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            this.set('currentLatLng', currentLatLng);
+            var mapOptions = {
+                zoom: this.get('zoom'),
+                center: currentLatLng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            this.set('mapOptions', mapOptions);
+        }
+    });
+    return mapModel;
+});
+
+/* START_TEMPLATE */
+define('hbs!app/templates/map',['hbs','hbs/handlebars'], function( hbs, Handlebars ){ 
+var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers);
+  
+
+
+  return "<div class=\"pageHeader\">\n    <h1>Codefellows Project to be named later</h1>\n    <h2 class=\"lead\">This will be some wonderful text about the app and what it does<br> It will be the subheader for the project so we can get our semantic mark up going.</h2>\n</div>\n<div class=\"row\">\n    <div class=\"col-md-8 categoryButtons\">\n        <p><b>Filter by:</b></p>\n        <a href=\"#\" class=\"btn btn-primary\">MOHI</a>\n        <a id=\"foodButton\" href=\"#\" class=\"btn btn-default\">Food</a>\n        <a href=\"#\" class=\"btn btn-default\">Clothes</a>\n        <a href=\"#\" class=\"btn btn-default\">Gas</a>\n    </div>\n    <div class=\"col-md-4 pitstopButton\">\n        <p>Look at the details of your options.</p>\n        <a href=\"/pitstops.html\" class=\"btn btn-lg btn-info\">Pitstops</a>\n    </div>\n</div>\n<div class=\"row\">\n    <div class=\"col-md-12 mapInfoContainer\">\n        <div id=\"map_canvas\">\n\n        </div>\n    </div>\n</div>";
+  });
+return t;
+});
+/* END_TEMPLATE */
+;
+define('app/views/mapsView',[
+        "backbone",
+        "hbs!app/templates/map",
+        "app/models/mapModel"
+], function(
+        Backbone,
+        mapTmpl,
+        mapModel
+) {
+
+    var MapView = Backbone.View.extend({
+        el: "#map_canvas",
+        template: mapTmpl,
+
+        initialize: function() {
+            var url = "http:maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places";
+            $.ajax({
+                url: url,
+                dataType: "script",
+                async: false,
+                success: function() {
+                    console.log("API script has been loaded");
+                }
+            });
+            this.model.set('mapModel', new google.maps.Map(this.el, this.model.get('mapOptions')));
+            this.render();
+        },
+        render: function() {
+            console.log("inside of the render funtion in mapsView");
+            this.$el.html(this.template(this.model.toJSON()));
+            return this;
+        }
+    });
+    return MapView;
+});
 define('app/routes/routes',[
     "backbone",
     "../collections/pitstopCollection",
     "../models/pitstopModel",
     "../views/pitstopCollectionView",
-    "../views/indexView"
+    "../views/indexView",
+    "../models/mapModel",
+    "../views/mapsView"
 ], function(
     Backbone,
     PitstopCollection,
     PitstopModel,
     PitstopCollectionView,
-    IndexView
+    IndexView,
+    MapModel,
+    MapsView
 ) {
     var fakeGoogleJson =
         [
@@ -24993,6 +25072,7 @@ define('app/routes/routes',[
         routes: {
             "" : "index",
             "map" : "map",
+            "pitstops"  : "pitstops"
         },
         start: function() {
             Backbone.history.start();
@@ -25007,11 +25087,17 @@ define('app/routes/routes',[
         },
         index: function() {
             this.indexView = new IndexView({});
-            console.dir(this.indexView);
+            //console.dir(this.indexView);
             this.indexView.initialize();
             console.log("Pipin is in indexView");
         },
         map: function() {
+            window.alert('inside of the map routes function');
+            this.mapsView = new MapView({});
+            this.mapsView.initialize();
+        },
+        pitstops: function() {
+            window.alert("we are in the pitstops route function");
             this.collection = new Backbone.Collection;
             this.collection.reset(fakeGoogleJson);
 
@@ -25074,8 +25160,6 @@ define('client',[
             "scripts": "app/scripts",
             "maps": "app/customMaps",
             "pitstopView": "app/views/pitstopView"
-
-
         }
     });
     require(['scripts'], function(){});

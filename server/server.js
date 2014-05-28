@@ -5,6 +5,14 @@ var bodyParser = require("body-parser");
 
 app.use(bodyParser.json());
 
+app.get("/map", function(req, res){
+    res.redirect("map.html");
+});
+app.get("/pitstops", function(req, res) {
+    res.redirect("map.html");
+});
+
+
 app.use("/", express.static("app"));
 app.use("/app", express.static("app"));
 app.use("/test", express.static("test"));

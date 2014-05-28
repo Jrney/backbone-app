@@ -22,8 +22,6 @@
             "scripts": "app/scripts",
             "maps": "app/customMaps",
             "pitstopView": "app/views/pitstopView"
-
-
         }
     });
     require(['scripts'], function(){});
