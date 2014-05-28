@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "bower": "^1.3.3",
+    "casper": "^0.1.1",
     "chai": "^1.9.1",
     "grunt": "^0.4.5",
     "grunt-casper": "^0.3.8",

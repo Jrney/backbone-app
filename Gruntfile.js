@@ -203,6 +203,17 @@ module.exports = function(grunt) {
                 },
             },
         },
+
+        casper: {
+            acceptance: {
+                options: {
+                    test:true,
+                },
+                files: {
+                    'test/acceptance/casper-results.xml':['test/acceptance/*_test.js']
+                }
+            }
+        }
     });
 
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
@@ -217,7 +228,7 @@ module.exports = function(grunt) {
     // Task: Test
     // ------------------------------------------------------------
 
-    grunt.registerTask('test', ['express:dev', 'jshint', 'mocha']);
+    grunt.registerTask('test', ['express:dev', 'casper']);
 
     // ------------------------------------------------------------
     // Task: Default
@@ -227,12 +238,3 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['build', 'express:dev', 'watch']);
 
 };
-
-
-
-
-
-
-
-
-
