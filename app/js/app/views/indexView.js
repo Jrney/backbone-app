@@ -6,7 +6,7 @@ define([
     indexTmpl
 ) {
     var IndexView = Backbone.View.extend({
-        el: ".homepage",
+        el: "#viewWrapper",
         template: indexTmpl,
         initialize: function() {
             this.render();

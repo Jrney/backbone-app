@@ -2,14 +2,12 @@ define([
     'jquery',
     'backbone',
     'isotope',
-    'pitstopView',
     "app/routes/routes"
 ], function(
     $,
     Backbone,
     Isotope,
-    PitstopView,
-    PitstopRouter
+    AppRouter
 ) {
     //ISOTOPE
     // var iso = new Isotope ("#container", {
@@ -21,7 +19,7 @@ define([
     // });
     $(function() {
         console.log("samwise likes app.js");
-        var router = new PitstopRouter();
+        var router = new AppRouter();
         router.start();
     });
 });

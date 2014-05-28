@@ -1,25 +1,10 @@
-define(['backbone'], function(Backbone) {
-    var mapModel = Backbone.Model.extend({
+define(['backbone', 'async!http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places'], function(Backbone) {
+    var MapModel = Backbone.Model.extend({
         default: {
-            center: {},
-            position: {},
-            currentLatLng: {},
-            mapTypeId: {},
-            zoom: 4,
-            mapOptions: {},
-            route: '',
-        },
-        initMap: function(center) {
-            this.set('center', center);
-            var currentLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            this.set('currentLatLng', currentLatLng);
-            var mapOptions = {
-                zoom: this.get('zoom'),
-                center: currentLatLng,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            this.set('mapOptions', mapOptions);
+            center: new google.maps.LatLng(37.09024, -95.712891),
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            zoom: 4
         }
     });
-    return mapModel;
+    return MapModel;
 });

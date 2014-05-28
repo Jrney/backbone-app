@@ -5,7 +5,7 @@ define([
     "../views/pitstopCollectionView",
     "../views/indexView",
     "../models/mapModel",
-    "../views/mapsView"
+    "../views/mapView"
 ], function(
     Backbone,
     PitstopCollection,
@@ -13,7 +13,7 @@ define([
     PitstopCollectionView,
     IndexView,
     MapModel,
-    MapsView
+    MapView
 ) {
     var fakeGoogleJson =
         [
@@ -201,7 +201,7 @@ define([
             }
        ];
 
-    var PitstopRouter = Backbone.Router.extend({
+    var AppRouter = Backbone.Router.extend({
         routes: {
             "" : "index",
             "map" : "map",
@@ -211,12 +211,7 @@ define([
             Backbone.history.start();
         },
         initialize: function() {
-            this.collection = new Backbone.Collection;
-            this.collection.reset(fakeGoogleJson);
 
-            this.pitstopView = new PitstopCollectionView({
-                collection: this.collection
-            });
         },
         index: function() {
             this.indexView = new IndexView({});
@@ -225,12 +220,13 @@ define([
             console.log("Pipin is in indexView");
         },
         map: function() {
-            window.alert('inside of the map routes function');
-            this.mapsView = new MapView({});
-            this.mapsView.initialize();
+            this.mapModel = new MapModel();
+            this.mapView = new MapView({
+                model: this.mapModel
+            });
+            this.mapView.render();
         },
         pitstops: function() {
-            window.alert("we are in the pitstops route function");
             this.collection = new Backbone.Collection;
             this.collection.reset(fakeGoogleJson);
 
@@ -239,6 +235,6 @@ define([
             });
         }
     });
-    return PitstopRouter;
+    return AppRouter;
 
 });

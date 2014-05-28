@@ -26,5 +26,6 @@
     });
     require(['scripts'], function(){});
     require(['client'], function(){});
+    require(['async!http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places'], function(){});
     //require(['maps'], function(){});
 }());
