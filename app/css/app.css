@@ -189,6 +189,9 @@ body {
   padding: 0 2%;
   max-width: 75em;
 }
+#container {
+  height: auto!important;
+}
 /*Tablet*/
 /*--------------------------------------------------------------------------------*/
 /* END min-width : 501px */

@@ -12,6 +12,8 @@ define([
 
 
     var PitstopView = Backbone.View.extend({
+        tagName: 'article',
+        className: 'item',
         template: pitstopTmpl,
         initialize: function () {
 

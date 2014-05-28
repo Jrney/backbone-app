@@ -24633,7 +24633,7 @@ helpers = this.merge(helpers, Handlebars.helpers);
   var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"item\">\n    <p><strong>Name:</strong> ";
+  buffer += "\n    <p><strong>Name:</strong> ";
   if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{}}); }
   else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{}}) : helper; }
   buffer += escapeExpression(stack1)
@@ -24649,7 +24649,7 @@ helpers = this.merge(helpers, Handlebars.helpers);
   if (helper = helpers.icon) { stack1 = helper.call(depth0, {hash:{}}); }
   else { helper = (depth0 && depth0.icon); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{}}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\"></img></p>\n</div>\n";
+    + "\"></img></p>\n\n";
   return buffer;
   });
 return t;
@@ -24693,6 +24693,8 @@ define('pitstopView',[
 
 
     var PitstopView = Backbone.View.extend({
+        tagName: 'article',
+        className: 'item',
         template: pitstopTmpl,
         initialize: function () {
 
@@ -24753,179 +24755,239 @@ define('app/views/pitstopCollectionView',[
     });
     return PitstopCollectionView;
 });
+
+/* START_TEMPLATE */
+define('hbs!app/templates/index',['hbs','hbs/handlebars'], function( hbs, Handlebars ){ 
+var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers);
+  
+
+
+  return "<form class=\"form-horizontal homepageForm\" role=\"form\">\n    <div class=\"form-group\">\n        <label for=\"startingSelect\" class=\"col-sm-3 control-label\">Origin</label>\n        <div class=\"col-sm-9\">\n            <select name=\"startingSelect\" class=\"form-control\">\n                <option value=\"Seattle\">Seattle</option>\n                <option value=\"Portland\">Portland</option>\n                <option value=\"Yakima\">Yakima</option>\n                <option value=\"MtVernon\">Mt. Vernon</option>\n            </select>\n        </div>\n    </div>\n    <div class=\"form-group\">\n        <label for=\"endingSelect\" class=\"col-sm-3 control-label\">Finish</label>\n        <div class=\"col-sm-9\">\n            <select name=\"endingSelect\" class=\"form-control\">\n                <option value=\"Seattle\">Seattle</option>\n                <option value=\"Portland\">Portland</option>\n                <option value=\"Yakima\">Yakima</option>\n                <option value=\"MtVernon\">Mt. Vernon</option>\n            </select>\n        </div>\n    </div>\n    <a href=\"/map.html\" class=\"btn btn-primary\">Embark</a>\n</form>";
+  });
+return t;
+});
+/* END_TEMPLATE */
+;
+define('app/views/indexView',[
+    "backbone",
+    "hbs!app/templates/index"
+], function(
+    Backbone,
+    indexTmpl
+) {
+    var IndexView = Backbone.View.extend({
+        el: ".homepage",
+        template: indexTmpl,
+        initialize: function() {
+            this.render();
+        },
+        render: function() {
+            this.$el.html(this.template());
+            return this;
+        }
+    });
+    return IndexView;
+});
 define('app/routes/routes',[
     "backbone",
     "../collections/pitstopCollection",
     "../models/pitstopModel",
-    "../views/pitstopCollectionView"
+    "../views/pitstopCollectionView",
+    "../views/indexView"
 ], function(
     Backbone,
     PitstopCollection,
     PitstopModel,
-    PitstopCollectionView
+    PitstopCollectionView,
+    IndexView
 ) {
-    var fakeGoogleJson = {
-       "html_attributions" : [
-          "Listings by \u003ca href=\"http://www.yellowpages.com.au/\"\u003eYellow Pages\u003c/a\u003e"
-       ],
-       "results" : [
-         {
-             "formatted_address" : "529 Kent Street, Sydney NSW, Australia",
-             "geometry" : {
-                "location" : {
-                   "lat" : -33.8750460,
-                   "lng" : 151.2052720
-                }
-             },
-             "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
-             "id" : "827f1ac561d72ec25897df088199315f7cbbc8ed",
-             "name" : "Tetsuya's",
-             "rating" : 4.30,
-             "reference" : "CnRmAAAAmmm3dlSVT3E7rIvwQ0lHBA4sayvxWEc4nZaXSSjRtfKRGoYnfr3d5AvQGk4e0u3oOErXsIJwtd3Wck1Onyw6pCzr8swW4E7dZ6wP4dV6AsXPvodwdVyqHgyGE_K8DqSp5McW_nFcci_-1jXb5Phv-RIQTzv5BjIGS0ufgTslfC6dqBoU7tw8NKUDHg28bPJlL0vGVWVgbTg",
-             "types" : [ "restaurant", "food", "establishment" ]
-          },
-          {
-             "formatted_address" : "Upper Level, Overseas Passenger Terminal/5 Hickson Road, The Rocks NSW, Australia",
-             "geometry" : {
-                "location" : {
-                   "lat" : -33.8583790,
-                   "lng" : 151.2100270
-                }
-             },
-             "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/cafe-71.png",
-             "id" : "f181b872b9bc680c8966df3e5770ae9839115440",
-             "name" : "Quay",
-             "rating" : 4.10,
-             "reference" : "CnRiAAAADmPDOkn3znv_fX78Ma6X5_t7caEGNdSWnpwMIdDNZkLpVKPnQJXP1ghlySO-ixqs28UtDmJaOlCHn18pxpj7UQjRzR4Kmye6Gijoqoox9bpkaCAJatbJGZEIIUwRbTNIE_L2jGo5BDqiosqU2F5QdBIQbXKrvfQuo6rmu8285j7bDBoUrGrN4r6XQ-PVm260PFt5kwc3EfY",
-             "types" : [ "cafe", "bar", "restaurant", "food", "establishment" ]
-          },
-          {
-             "formatted_address" : "107 George Street, The Rocks NSW, Australia",
-             "geometry" : {
-                "location" : {
-                   "lat" : -33.8597750,
-                   "lng" : 151.2085920
-                }
-             },
-             "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
-             "id" : "7beacea28938ae42bcac04faf79a607bf84409e6",
-             "name" : "Rockpool",
-             "rating" : 4.0,
-             "reference" : "CnRlAAAAVK4Ek78r9yHV56I-zbaTxo9YiroCbTlel-ZRj2i6yGAkLwNMm_flMhCl3j8ZHN-jJyG1TvKqBBnKQS2z4Tceu-1kZupZ1HSo5JWRBKd7qt2vKgT8VauiEBQL-zJiKVzSy5rFfilKDLSiLusmdi88ThIQqqj6hKHn5awdj6C4f59ifRoUg67KlbpuGuuW7S1tAH_EyBl6KE4",
-             "types" : [ "restaurant", "food", "establishment" ]
-          },
-          {
-             "formatted_address" : "483 George Street, Sydney NSW, Australia",
-             "events" : [
-                {
-                  "event_id" : "7lH_gK1GphU",
-                  "summary" : "Google Maps Developer Meetup: Rockin' out with the Places API",
-                  "url" : "https://developers.google.com/places"
-                }
-              ],
-             "geometry" : {
-                "location" : {
-                   "lat" : -33.8731950,
-                   "lng" : 151.2063380
-                }
-             },
-             "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/civic_building-71.png",
-             "id" : "017049cb4e82412aaf0efbde890e82b7f2987c16",
-             "name" : "Chinatown Sydney",
-             "rating" : 4.0,
-             "reference" : "CnRuAAAAsLNeRQtKD7TEUXWG6gYD7ByOVKjQE61GSyeGZrX-pOPVps2BaLBlH0zBHlrVU9DKhsuXra075loWmZUCbczKDPdCaP9FVJXB2NsZ1q7188pqRFik58S9Z1lcWjyVoVqvdUUt9bDMLqxVT4ENmolbgBIQ9Wy0sgDy0BgWyg5kfPMHCxoUOvmhfKC-lTefXGgnsRqEQwn8M0I",
-             "types" : [
-                "city_hall",
-                "park",
-                "restaurant",
-                "doctor",
-                "train_station",
-                "local_government_office",
-                "food",
-                "health",
-                "establishment"
-             ]
-         },
-         {
-             "formatted_address" : "529 Kent Street, Sydney NSW, Australia",
-             "geometry" : {
-                "location" : {
-                   "lat" : -33.8750460,
-                   "lng" : 151.2052720
-                }
-             },
-             "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
-             "id" : "827f1ac561d72ec25897df088199315f7cbbc8ed",
-             "name" : "Tetsuya's",
-             "rating" : 4.30,
-             "reference" : "CnRmAAAAmmm3dlSVT3E7rIvwQ0lHBA4sayvxWEc4nZaXSSjRtfKRGoYnfr3d5AvQGk4e0u3oOErXsIJwtd3Wck1Onyw6pCzr8swW4E7dZ6wP4dV6AsXPvodwdVyqHgyGE_K8DqSp5McW_nFcci_-1jXb5Phv-RIQTzv5BjIGS0ufgTslfC6dqBoU7tw8NKUDHg28bPJlL0vGVWVgbTg",
-             "types" : [ "restaurant", "food", "establishment" ]
-         },
-         {
-             "formatted_address" : "Upper Level, Overseas Passenger Terminal/5 Hickson Road, The Rocks NSW, Australia",
-             "geometry" : {
-                "location" : {
-                   "lat" : -33.8583790,
-                   "lng" : 151.2100270
-                }
-             },
-             "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/cafe-71.png",
-             "id" : "f181b872b9bc680c8966df3e5770ae9839115440",
-             "name" : "Quay",
-             "rating" : 4.10,
-             "reference" : "CnRiAAAADmPDOkn3znv_fX78Ma6X5_t7caEGNdSWnpwMIdDNZkLpVKPnQJXP1ghlySO-ixqs28UtDmJaOlCHn18pxpj7UQjRzR4Kmye6Gijoqoox9bpkaCAJatbJGZEIIUwRbTNIE_L2jGo5BDqiosqU2F5QdBIQbXKrvfQuo6rmu8285j7bDBoUrGrN4r6XQ-PVm260PFt5kwc3EfY",
-             "types" : [ "cafe", "bar", "restaurant", "food", "establishment" ]
-          },
-          {
-             "formatted_address" : "107 George Street, The Rocks NSW, Australia",
-             "geometry" : {
-                "location" : {
-                   "lat" : -33.8597750,
-                   "lng" : 151.2085920
-                }
-             },
-             "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
-             "id" : "7beacea28938ae42bcac04faf79a607bf84409e6",
-             "name" : "Rockpool",
-             "rating" : 4.0,
-             "reference" : "CnRlAAAAVK4Ek78r9yHV56I-zbaTxo9YiroCbTlel-ZRj2i6yGAkLwNMm_flMhCl3j8ZHN-jJyG1TvKqBBnKQS2z4Tceu-1kZupZ1HSo5JWRBKd7qt2vKgT8VauiEBQL-zJiKVzSy5rFfilKDLSiLusmdi88ThIQqqj6hKHn5awdj6C4f59ifRoUg67KlbpuGuuW7S1tAH_EyBl6KE4",
-             "types" : [ "restaurant", "food", "establishment" ]
-          },
-          {
-             "formatted_address" : "483 George Street, Sydney NSW, Australia",
-             "events" : [
-                {
-                  "event_id" : "7lH_gK1GphU",
-                  "summary" : "Google Maps Developer Meetup: Rockin' out with the Places API",
-                  "url" : "https://developers.google.com/places"
-                }
-              ],
-             "geometry" : {
-                "location" : {
-                   "lat" : -33.8731950,
-                   "lng" : 151.2063380
-                }
-             },
-             "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/civic_building-71.png",
-             "id" : "017049cb4e82412aaf0efbde890e82b7f2987c16",
-             "name" : "Chinatown Sydney",
-             "rating" : 4.0,
-             "reference" : "CnRuAAAAsLNeRQtKD7TEUXWG6gYD7ByOVKjQE61GSyeGZrX-pOPVps2BaLBlH0zBHlrVU9DKhsuXra075loWmZUCbczKDPdCaP9FVJXB2NsZ1q7188pqRFik58S9Z1lcWjyVoVqvdUUt9bDMLqxVT4ENmolbgBIQ9Wy0sgDy0BgWyg5kfPMHCxoUOvmhfKC-lTefXGgnsRqEQwn8M0I",
-             "types" : [
-                "city_hall",
-                "park",
-                "restaurant",
-                "doctor",
-                "train_station",
-                "local_government_office",
-                "food",
-                "health",
-                "establishment"
-             ]
-          }
-       ],
-       "status" : "OK"
-    };
+    var fakeGoogleJson =
+        [
+            {
+                "formatted_address" : "529 Kent Street, Sydney NSW, Australia",
+                "geometry" : {
+                    "location" : {
+                        "lat" : -33.8750460,
+                        "lng" : 151.2052720
+                    }
+                },
+                "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+                "id" : "827f1ac561d72ec25897df088199315f7cbbc8ed",
+                "name" : "Tetsuya's",
+                "rating" : 4.30,
+                "reference" : "CnRmAAAAmmm3dlSVT3E7rIvwQ0lHBA4sayvxWEc4nZaXSSjRtfKRGoYnfr3d5AvQGk4e0u3oOErXsIJwtd3Wck1Onyw6pCzr8swW4E7dZ6wP4dV6AsXPvodwdVyqHgyGE_K8DqSp5McW_nFcci_-1jXb5Phv-RIQTzv5BjIGS0ufgTslfC6dqBoU7tw8NKUDHg28bPJlL0vGVWVgbTg",
+                "types" : [
+                    "restaurant",
+                    "food",
+                    "establishment"
+                ]
+            },
+            {
+                "formatted_address" : "Upper Level, Overseas Passenger Terminal/5 Hickson Road, The Rocks NSW, Australia",
+                "geometry" : {
+                    "location" : {
+                        "lat" : -33.8583790,
+                        "lng" : 151.2100270
+                    }
+                },
+                "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/cafe-71.png",
+                "id" : "f181b872b9bc680c8966df3e5770ae9839115440",
+                "name" : "Quay",
+                "rating" : 4.10,
+                "reference" : "CnRiAAAADmPDOkn3znv_fX78Ma6X5_t7caEGNdSWnpwMIdDNZkLpVKPnQJXP1ghlySO-ixqs28UtDmJaOlCHn18pxpj7UQjRzR4Kmye6Gijoqoox9bpkaCAJatbJGZEIIUwRbTNIE_L2jGo5BDqiosqU2F5QdBIQbXKrvfQuo6rmu8285j7bDBoUrGrN4r6XQ-PVm260PFt5kwc3EfY",
+                "types" : [
+                    "cafe",
+                    "bar",
+                    "restaurant",
+                    "food",
+                    "establishment"
+                ]
+            },
+            {
+                "formatted_address" : "107 George Street, The Rocks NSW, Australia",
+                "geometry" : {
+                    "location" : {
+                        "lat" : -33.8597750,
+                        "lng" : 151.2085920
+                    }
+                },
+                "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+                "id" : "7beacea28938ae42bcac04faf79a607bf84409e6",
+                "name" : "Rockpool",
+                "rating" : 4.0,
+                "reference" : "CnRlAAAAVK4Ek78r9yHV56I-zbaTxo9YiroCbTlel-ZRj2i6yGAkLwNMm_flMhCl3j8ZHN-jJyG1TvKqBBnKQS2z4Tceu-1kZupZ1HSo5JWRBKd7qt2vKgT8VauiEBQL-zJiKVzSy5rFfilKDLSiLusmdi88ThIQqqj6hKHn5awdj6C4f59ifRoUg67KlbpuGuuW7S1tAH_EyBl6KE4",
+                "types" : [
+                    "restaurant",
+                    "food",
+                    "establishment"
+                ]
+            },
+            {
+                "formatted_address" : "483 George Street, Sydney NSW, Australia",
+                "events" : [
+                    {
+                        "event_id" : "7lH_gK1GphU",
+                        "summary" : "Google Maps Developer Meetup: Rockin' out with the Places API",
+                        "url" : "https://developers.google.com/places"
+                    }
+                ],
+                "geometry" : {
+                    "location" : {
+                        "lat" : -33.8731950,
+                        "lng" : 151.2063380
+                    }
+                },
+                "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/civic_building-71.png",
+                "id" : "017049cb4e82412aaf0efbde890e82b7f2987c16",
+                "name" : "Chinatown Sydney",
+                "rating" : 4.0,
+                "reference" : "CnRuAAAAsLNeRQtKD7TEUXWG6gYD7ByOVKjQE61GSyeGZrX-pOPVps2BaLBlH0zBHlrVU9DKhsuXra075loWmZUCbczKDPdCaP9FVJXB2NsZ1q7188pqRFik58S9Z1lcWjyVoVqvdUUt9bDMLqxVT4ENmolbgBIQ9Wy0sgDy0BgWyg5kfPMHCxoUOvmhfKC-lTefXGgnsRqEQwn8M0I",
+                "types" : [
+                    "city_hall",
+                    "park",
+                    "restaurant",
+                    "doctor",
+                    "train_station",
+                    "local_government_office",
+                    "food",
+                    "health",
+                    "establishment"
+                ]
+            },
+            {
+                "formatted_address" : "529 Kent Street, Sydney NSW, Australia",
+                "geometry" : {
+                    "location" : {
+                        "lat" : -33.8750460,
+                        "lng" : 151.2052720
+                    }
+                },
+                "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+                "id" : "827f1ac561d72ec25897df088199315f7cbbc8ed",
+                "name" : "Tetsuya's",
+                "rating" : 4.30,
+                "reference" : "CnRmAAAAmmm3dlSVT3E7rIvwQ0lHBA4sayvxWEc4nZaXSSjRtfKRGoYnfr3d5AvQGk4e0u3oOErXsIJwtd3Wck1Onyw6pCzr8swW4E7dZ6wP4dV6AsXPvodwdVyqHgyGE_K8DqSp5McW_nFcci_-1jXb5Phv-RIQTzv5BjIGS0ufgTslfC6dqBoU7tw8NKUDHg28bPJlL0vGVWVgbTg",
+                "types" : [
+                    "restaurant",
+                    "food",
+                    "establishment"
+                ]
+            },
+            {
+                "formatted_address" : "Upper Level, Overseas Passenger Terminal/5 Hickson Road, The Rocks NSW, Australia",
+                "geometry" : {
+                    "location" : {
+                        "lat" : -33.8583790,
+                        "lng" : 151.2100270
+                    }
+                },
+                "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/cafe-71.png",
+                "id" : "f181b872b9bc680c8966df3e5770ae9839115440",
+                "name" : "Quay",
+                "rating" : 4.10,
+                "reference" : "CnRiAAAADmPDOkn3znv_fX78Ma6X5_t7caEGNdSWnpwMIdDNZkLpVKPnQJXP1ghlySO-ixqs28UtDmJaOlCHn18pxpj7UQjRzR4Kmye6Gijoqoox9bpkaCAJatbJGZEIIUwRbTNIE_L2jGo5BDqiosqU2F5QdBIQbXKrvfQuo6rmu8285j7bDBoUrGrN4r6XQ-PVm260PFt5kwc3EfY",
+                "types" : [
+                    "cafe",
+                    "bar",
+                    "restaurant",
+                    "food",
+                    "establishment"
+                ]
+            },
+            {
+                "formatted_address" : "107 George Street, The Rocks NSW, Australia",
+                "geometry" : {
+                    "location" : {
+                        "lat" : -33.8597750,
+                        "lng" : 151.2085920
+                    }
+                },
+                "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+                "id" : "7beacea28938ae42bcac04faf79a607bf84409e6",
+                "name" : "Rockpool",
+                "rating" : 4.0,
+                "reference" : "CnRlAAAAVK4Ek78r9yHV56I-zbaTxo9YiroCbTlel-ZRj2i6yGAkLwNMm_flMhCl3j8ZHN-jJyG1TvKqBBnKQS2z4Tceu-1kZupZ1HSo5JWRBKd7qt2vKgT8VauiEBQL-zJiKVzSy5rFfilKDLSiLusmdi88ThIQqqj6hKHn5awdj6C4f59ifRoUg67KlbpuGuuW7S1tAH_EyBl6KE4",
+                "types" : [
+                    "restaurant",
+                    "food",
+                    "establishment"
+                ]
+            },
+            {
+                "formatted_address" : "483 George Street, Sydney NSW, Australia",
+                "events" : [
+                    {
+                    "event_id" : "7lH_gK1GphU",
+                    "summary" : "Google Maps Developer Meetup: Rockin' out with the Places API",
+                    "url" : "https://developers.google.com/places"
+                    }
+                ],
+                "geometry" : {
+                    "location" : {
+                        "lat" : -33.8731950,
+                        "lng" : 151.2063380
+                    }
+                },
+                "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/civic_building-71.png",
+                "id" : "017049cb4e82412aaf0efbde890e82b7f2987c19",
+                "name" : "Jim's Roadside BBQ Sydney",
+                "rating" : 4.0,
+                "reference" : "CnRuAAAAsLNeRQtKD7TEUXWG6gYD7ByOVKjQE61GSyeGZrX-pOPVps2BaLBlH0zBHlrVU9DKhsuXra075loWmZUCbczKDPdCaP9FVJXB2NsZ1q7188pqRFik58S9Z1lcWjyVoVqvdUUt9bDMLqxVT4ENmolbgBIQ9Wy0sgDy0BgWyg5kfPMHCxoUOvmhfKC-lTefXGgnsRqEQwn8M0I",
+                "types" : [
+                    "city_hall",
+                    "park",
+                    "restaurant",
+                    "doctor",
+                    "train_station",
+                    "local_government_office",
+                    "food",
+                    "health",
+                    "establishment"
+                ]
+            }
+       ];
 
     var PitstopRouter = Backbone.Router.extend({
         routes: {
@@ -24944,7 +25006,10 @@ define('app/routes/routes',[
             });
         },
         index: function() {
-
+            this.indexView = new IndexView({});
+            console.dir(this.indexView);
+            this.indexView.initialize();
+            console.log("Pipin is in indexView");
         },
         map: function() {
             this.collection = new Backbone.Collection;
@@ -24972,13 +25037,13 @@ define('client',[
     PitstopRouter
 ) {
     //ISOTOPE
-    var iso = new Isotope ("#container", {
-        itemSelector: '.item',
-        layoutMode: 'masonry',
-        masonry: {
-            columnWidth: 25
-        }
-    });
+    // var iso = new Isotope ("#container", {
+    //     itemSelector: '.item',
+    //     layoutMode: 'masonry',
+    //     masonry: {
+    //         columnWidth: 25
+    //     }
+    // });
     $(function() {
         console.log("samwise likes app.js");
         var router = new PitstopRouter();
