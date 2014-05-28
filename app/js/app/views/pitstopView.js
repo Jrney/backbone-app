@@ -1,6 +1,6 @@
 define([
     "backbone",
-    "hbs!app/templates/pitstops",
+    "hbs!app/templates/pitstop",
     "app/collections/pitstopCollection"
 ], function (
     Backbone,
@@ -12,7 +12,6 @@ define([
 
 
     var PitstopView = Backbone.View.extend({
-        el: "#container",
         template: pitstopTmpl,
         initialize: function () {
 

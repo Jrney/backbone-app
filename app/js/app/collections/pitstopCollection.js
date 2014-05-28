@@ -1,6 +1,6 @@
 define([
         "backbone",
-        "../models/pitstopModel.js"
+        "app/models/pitstopModel"
 ], function(
     Backbone,
     PitstopModel

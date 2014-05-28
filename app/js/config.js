@@ -21,7 +21,7 @@
             "client": "app/app",
             "scripts": "app/scripts",
             "maps": "app/customMaps",
-            "pitstopsView": "app/views/pitstopsView"
+            "pitstopView": "app/views/pitstopView"
 
 
         }

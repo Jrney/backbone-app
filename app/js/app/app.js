@@ -2,7 +2,7 @@ define([
     'jquery',
     'backbone',
     'isotope',
-    'pitstopsView',
+    'pitstopView',
     "app/routes/routes"
 ], function(
     $,
@@ -20,6 +20,7 @@ define([
         }
     });
     $(function() {
+        console.log("samwise likes app.js");
         var router = new PitstopRouter();
         router.start();
     });

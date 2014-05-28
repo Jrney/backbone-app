@@ -24626,14 +24626,31 @@ define('hbs',[
 ;
 
 /* START_TEMPLATE */
-define('hbs!app/templates/pitstops',['hbs','hbs/handlebars'], function( hbs, Handlebars ){ 
+define('hbs!app/templates/pitstop',['hbs','hbs/handlebars'], function( hbs, Handlebars ){ 
 var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers);
-  
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  return "<h2>Pitstops</h2>\n<div id=\"pitstopsContainer\" class=\"container\">\n\n</div>";
+  buffer += "<div class=\"item\">\n    <p><strong>Name:</strong> ";
+  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{}}); }
+  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{}}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</p>\n    <p><strong>Address:</strong> ";
+  if (helper = helpers.formatted_address) { stack1 = helper.call(depth0, {hash:{}}); }
+  else { helper = (depth0 && depth0.formatted_address); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{}}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</p>\n    <p><strong>Rating:</strong> ";
+  if (helper = helpers.rating) { stack1 = helper.call(depth0, {hash:{}}); }
+  else { helper = (depth0 && depth0.rating); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{}}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</p>\n    \n    <p><img src=\"";
+  if (helper = helpers.icon) { stack1 = helper.call(depth0, {hash:{}}); }
+  else { helper = (depth0 && depth0.icon); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{}}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"></img></p>\n</div>\n";
+  return buffer;
   });
 return t;
 });
@@ -24652,7 +24669,7 @@ define('app/models/pitstopModel',["backbone"], function(Backbone) {
 });
 define('app/collections/pitstopCollection',[
         "backbone",
-        "../models/pitstopModel.js"
+        "app/models/pitstopModel"
 ], function(
     Backbone,
     PitstopModel
@@ -24662,9 +24679,9 @@ define('app/collections/pitstopCollection',[
     });
     return PitstopCollection;
 });
-define('pitstopsView',[
+define('pitstopView',[
     "backbone",
-    "hbs!app/templates/pitstops",
+    "hbs!app/templates/pitstop",
     "app/collections/pitstopCollection"
 ], function (
     Backbone,
@@ -24676,7 +24693,6 @@ define('pitstopsView',[
 
 
     var PitstopView = Backbone.View.extend({
-        el: "#container",
         template: pitstopTmpl,
         initialize: function () {
 
@@ -24688,17 +24704,33 @@ define('pitstopsView',[
     });
     return PitstopView;
 });
+
+/* START_TEMPLATE */
+define('hbs!app/templates/pitstops',['hbs','hbs/handlebars'], function( hbs, Handlebars ){ 
+var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers);
+  
+
+
+  return "<h2>Pitstops</h2>\n<div id=\"pitstopsContainer\" class=\"container\">\n\n</div>";
+  });
+return t;
+});
+/* END_TEMPLATE */
+;
 define('app/views/pitstopCollectionView',[
     "backbone",
     "hbs!app/templates/pitstops",
-    "pitstopsView"
+    "pitstopView"
 ], function(
     Backbone,
     pitstopsTmpl,
-    PitstopsView
+    PitstopView
 ) {
     var PitstopCollectionView = Backbone.View.extend({
-        template: pitstopTmpl,
+        el: "#container",
+        template: pitstopsTmpl,
         initialize: function() {
             this.render();
         },
@@ -24930,7 +24962,7 @@ define('client',[
     'jquery',
     'backbone',
     'isotope',
-    'pitstopsView',
+    'pitstopView',
     "app/routes/routes"
 ], function(
     $,
@@ -24948,6 +24980,7 @@ define('client',[
         }
     });
     $(function() {
+        console.log("samwise likes app.js");
         var router = new PitstopRouter();
         router.start();
     });
@@ -24975,7 +25008,7 @@ define('client',[
             "client": "app/app",
             "scripts": "app/scripts",
             "maps": "app/customMaps",
-            "pitstopsView": "app/views/pitstopsView"
+            "pitstopView": "app/views/pitstopView"
 
 
         }
