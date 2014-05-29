@@ -1,34 +1,43 @@
 define([
         "backbone",
         "jquery",
-        "hbs!app/templates/map",
-        "app/models/mapModel"
+        "hbs!app/templates/map"
+        //"app/models/mapModel"
 ], function(
         Backbone,
         $,
-        mapTmpl,
-        MapModel
+        mapTmpl
+        //MapModel
 ) {
 
     var MapView = Backbone.View.extend({
         el: "#viewWrapper",
         template: mapTmpl,
 
-
         initialize: function() {
-            window.console.log("inside of initMap");
-            var options = [{center: new google.maps.LatLng(37.09024, -95.712891), mapTypeId:google.maps.MapTypeId.ROADMAP, zoom: 4 }];
 
-            var myMap = new google.maps.Map($("#map_canvas"), options);
-            window.console.log("was the map returned?");
-            this.render();
+            window.console.log("inside of initialize");
+
+            var options =
+                {
+                    center: new google.maps.LatLng(47.620467 , -122.349116),
+                    mapTypeId:google.maps.MapTypeId.ROADMAP,
+                    zoom: 16
+                };
+
+            this.$el.html(this.template());
+
+            window.console.log("about to log this.$el :");
+            window.console.dir(this.$el);
+            var myMap = new google.maps.Map($("#map_canvas")[0], options);
+
+            window.console.log("why isn't watch running in the Gruntfile?");
+
+            return myMap;
+
         },
         render: function() {
-            window.console.log("inside of the render funtion in mapsView");
 
-            this.$el.html(this.template(this.model.toJSON()));
-
-            return this;
         }
     });
     return MapView;

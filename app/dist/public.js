@@ -24708,8 +24708,8 @@ define('pitstopView',[
 
 
     var PitstopView = Backbone.View.extend({
-        tagName: 'article',
-        className: 'item',
+        tagName: "article",
+        className: "item",
         template: pitstopTmpl,
         initialize: function () {
 
@@ -24836,7 +24836,7 @@ define('async',[],function(){
 });
 
 
-define('app/models/mapModel',['backbone', 'async!http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places'], function(Backbone) {
+define('app/models/mapModel',["backbone", "async!http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places"], function(Backbone) {
     var MapModel = Backbone.Model.extend({
         default: {
             center: new google.maps.LatLng(37.09024, -95.712891),
@@ -24863,33 +24863,48 @@ return t;
 ;
 define('app/views/mapView',[
         "backbone",
-        "hbs!app/templates/map",
-        "app/models/mapModel"
+        "jquery",
+        "hbs!app/templates/map"
+        //"app/models/mapModel"
 ], function(
         Backbone,
-        mapTmpl,
-        MapModel
+        $,
+        mapTmpl
+        //MapModel
 ) {
 
     var MapView = Backbone.View.extend({
         el: "#viewWrapper",
         template: mapTmpl,
 
-
         initialize: function() {
-            console.log('inside of initMap');
-            var options = [{center: new google.maps.LatLng(37.09024, -95.712891), mapTypeId:google.maps.MapTypeId.ROADMAP, zoom: 4 }];
+            // 1. set the template to $el
+            // 2. create a new map
+            // 3. append map to template
+            // 4. in router, create a new view
+            //
+            window.console.log("inside of initialize");
 
-            var myMap = new google.maps.Map($('#map_canvas'), options);
-            console.log("was the map returned?");
-            this.render();
+            var options =
+                {
+                    center: new google.maps.LatLng(47.620467 , -122.349116),
+                    mapTypeId:google.maps.MapTypeId.ROADMAP,
+                    zoom: 16
+                };
+
+            this.$el.html(this.template());
+
+            window.console.log("about to log this.$el :");
+            window.console.dir(this.$el);
+            var myMap = new google.maps.Map($("#map_canvas")[0], options);
+
+            window.console.log("why isn't watch working?");
+
+            return myMap;
+
         },
         render: function() {
-            console.log("inside of the render funtion in mapsView");
 
-            this.$el.html(this.template(this.model.toJSON()));
-
-            return this;
         }
     });
     return MapView;
@@ -25113,17 +25128,17 @@ define('app/routes/routes',[
             this.indexView = new IndexView({});
             //console.dir(this.indexView);
             this.indexView.initialize();
-            console.log("Pipin is in indexView");
+            window.console.log("Pipin is in indexView");
         },
         map: function() {
-            this.mapModel = new MapModel();
-            this.mapView = new MapView({
-                model: this.mapModel
-            });
-            this.mapView.render();
+            window.console.log("inside of map routes function");
+            this.mapView = new MapView({});
+            window.console.log("about to console.dir this.mapView: ");
+            window.console.dir(this.mapView);
+            this.mapView.initialize();
         },
         pitstops: function() {
-            this.collection = new Backbone.Collection;
+            this.collection = new Backbone.Collection();
             this.collection.reset(fakeGoogleJson);
 
             this.pitstopView = new PitstopCollectionView({
@@ -25135,9 +25150,9 @@ define('app/routes/routes',[
 
 });
 define('client',[
-    'jquery',
-    'backbone',
-    'isotope',
+    "jquery",
+    "backbone",
+    "isotope",
     "app/routes/routes"
 ], function(
     $,
@@ -25154,7 +25169,7 @@ define('client',[
     //     }
     // });
     $(function() {
-        console.log("samwise likes app.js");
+        window.console.log("samwise likes app.js");
         var router = new AppRouter();
         router.start();
     });
@@ -25174,20 +25189,21 @@ define('client',[
             "underscore": "vendor/lodash.underscore",
             "hbs": "vendor/hbs/hbs",
             "async": "vendor/async",
-            "google": "google",
+            "goog": "vendor/goog",
+            "propertyParser": "vendor/propertyParser",
             "isotope": "vendor/isotope.pkgd",
             "backbone": "vendor/backbone",
+            "gmaps": "http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places",
 
             // application libraries
             "client": "app/app",
             "scripts": "app/scripts",
-            "maps": "app/customMaps",
             "pitstopView": "app/views/pitstopView"
         }
     });
-    require(['scripts'], function(){});
-    require(['client'], function(){});
-    require(['async!http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places'], function(){});
+    require(["scripts"], function(){});
+    require(["client"], function(){});
+    //require(["async!http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places"], function(){});
     //require(['maps'], function(){});
 }());
 define("config", function(){});

@@ -220,11 +220,11 @@ define([
             window.console.log("Pipin is in indexView");
         },
         map: function() {
-            this.mapModel = new MapModel();
-            this.mapView = new MapView({
-                model: this.mapModel
-            });
-            this.mapView.render();
+            window.console.log("inside of map routes function");
+            this.mapView = new MapView({});
+            window.console.log("about to console.dir this.mapView: ");
+            window.console.dir(this.mapView);
+            this.mapView.initialize();
         },
         pitstops: function() {
             this.collection = new Backbone.Collection();
