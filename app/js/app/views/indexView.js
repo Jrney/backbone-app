@@ -16,16 +16,16 @@ define([
         template: indexTmpl,
         initialize: function() {
             this.render();
-            this.request = new RequestModel({});
             var that = this;
 
             $("#embarkDirection").on("click", function(e) {
                 e.preventDefault();
 
-                that.request.origin = $("#startInput").val();
-                that.request.destination = $("#endInput").val();
+                that.model.set({
+                    origin : $("#startInput").val(),
+                    destination : $("#endInput").val()
+                });
 
-                window.console.log(that.request);
                 Backbone.history.navigate("map", {trigger: true});
             });
 

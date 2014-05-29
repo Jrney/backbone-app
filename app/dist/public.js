@@ -24800,16 +24800,16 @@ define('app/views/indexView',[
         template: indexTmpl,
         initialize: function() {
             this.render();
-            this.request = new RequestModel({});
             var that = this;
 
             $("#embarkDirection").on("click", function(e) {
                 e.preventDefault();
 
-                that.request.origin = $("#startInput").val();
-                that.request.destination = $("#endInput").val();
+                that.model.set({
+                    origin : $("#startInput").val(),
+                    destination : $("#endInput").val()
+                });
 
-                window.console.log(that.request);
                 Backbone.history.navigate("map", {trigger: true});
             });
 
@@ -24840,7 +24840,7 @@ helpers = this.merge(helpers, Handlebars.helpers);
   
 
 
-  return "<div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">\n    <div class=\"container\">\n        <div class=\"navbar-header\">\n            <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">\n                <span class=\"sr-only\">Toggle navigation</span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n            </button>\n            <a class=\"navbar-brand\" href=\"#\">Jrney</a>\n        </div>\n        <div class=\"collapse navbar-collapse\">\n            <form class=\"form-inline navForm\" role=\"form\">\n                <div class=\"form-group\">\n                    <label for=\"startingSelect\" class=\"\">Origin</label>\n                        <select name=\"startingSelect\" class=\"form-control\">\n                            <option value=\"Seattle\">Seattle</option>\n                            <option value=\"Portland\">Portland</option>\n                            <option value=\"Yakima\">Yakima</option>\n                            <option value=\"MtVernon\">Mt. Vernon</option>\n                        </select>\n                </div>\n                <div class=\"form-group\">\n                    <label for=\"endingSelect\" class=\"\">Finish</label>\n                        <select name=\"endingSelect\" class=\"form-control\">\n                            <option value=\"Seattle\">Seattle</option>\n                            <option value=\"Portland\">Portland</option>\n                            <option value=\"Yakima\">Yakima</option>\n                            <option value=\"MtVernon\">Mt. Vernon</option>\n                        </select>\n                </div>\n                <a href=\"/map.html\" class=\"btn btn-primary\">Embark</a>\n            </form>\n<!-- end .navForm -->\n        </div><!--/.nav-collapse -->\n    </div>\n</div>\n<!-- end .navbar -->\n<div class=\"pageHeader\">\n    <h1>Codefellows Project to be named later</h1>\n    <h2 class=\"lead\">This will be some wonderful text about the app and what it does<br> It will be the subheader for the project so we can get our semantic mark up going.</h2>\n</div>\n<div class=\"row\">\n    <div class=\"col-md-8 categoryButtons\">\n        <p><b>Filter by:</b></p>\n        <a href=\"#\" class=\"btn btn-primary\">MOHI</a>\n        <a id=\"foodButton\" href=\"#\" class=\"btn btn-default\">Food</a>\n        <a href=\"#\" class=\"btn btn-default\">Clothes</a>\n        <a href=\"#\" class=\"btn btn-default\">Gas</a>\n    </div>\n    <div class=\"col-md-4 pitstopButton\">\n        <p>Look at the details of your options.</p>\n        <a href=\"/pitstops.html\" class=\"btn btn-lg btn-info\">Pitstops</a>\n    </div>\n</div>\n<div class=\"row\">\n    <div class=\"col-md-12 mapInfoContainer\">\n        <div id=\"map_canvas\">\n\n        </div>\n    </div>\n</div>\n<footer class=\"container\">\n    <small>All Rights Reserved &copy; 2014</small>\n</footer>";
+  return "<div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">\n    <div class=\"container\">\n        <div class=\"navbar-header\">\n            <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">\n                <span class=\"sr-only\">Toggle navigation</span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n            </button>\n            <a class=\"navbar-brand\" href=\"#\">Jrney</a>\n        </div>\n        <div class=\"collapse navbar-collapse\">\n            <form class=\"form-inline navForm\" role=\"form\">\n                <div class=\"form-group\">\n                    <label for=\"startingSelect\" class=\"col-sm-3 control-label\">Origin</label>\n                    <div class=\"col-sm-9\">\n                        <input id=\"startInput\" type=\"text\" name=\"startPoint\" value=\"\" placeholder=\"start point\">\n                    </div>\n                </div>\n                <div class=\"form-group\">\n                    <label for=\"endingSelect\" class=\"col-sm-3 control-label\">Finish</label>\n                    <div class=\"col-sm-9\">\n                        <input id=\"endInput\" type=\"text\" name=\"endPoint\" value=\"\" placeholder=\"end point\">\n                    </div>\n                </div>\n                <button id=\"embarkDirection\" type=\"button\" class=\"btn btn-primary\">Embark</button>\n            </form>\n<!-- end .navForm -->\n        </div><!--/.nav-collapse -->\n    </div>\n</div>\n<!-- end .navbar -->\n<div class=\"pageHeader\">\n    <h1>Codefellows Project to be named later</h1>\n    <h2 class=\"lead\">This will be some wonderful text about the app and what it does<br> It will be the subheader for the project so we can get our semantic mark up going.</h2>\n</div>\n<div class=\"row\">\n    <div class=\"col-md-8 categoryButtons\">\n        <p><b>Filter by:</b></p>\n        <a href=\"#\" class=\"btn btn-primary\">MOHI</a>\n        <a id=\"foodButton\" href=\"#\" class=\"btn btn-default\">Food</a>\n        <a href=\"#\" class=\"btn btn-default\">Clothes</a>\n        <a href=\"#\" class=\"btn btn-default\">Gas</a>\n    </div>\n    <div class=\"col-md-4 pitstopButton\">\n        <p>Look at the details of your options.</p>\n        <a href=\"/pitstops.html\" class=\"btn btn-lg btn-info\">Pitstops</a>\n    </div>\n</div>\n<div class=\"row\">\n    <div class=\"col-md-12 mapInfoContainer\">\n        <div id=\"map_canvas\">\n\n        </div>\n    </div>\n</div>\n<footer class=\"container\">\n    <small>All Rights Reserved &copy; 2014</small>\n</footer>";
   });
 return t;
 });
@@ -24866,24 +24866,50 @@ define('app/views/mapView',[
 
         initialize: function() {
 
-            var options =
-                {
-                    center: new google.maps.LatLng(47.620467 , -122.349116),
-                    mapTypeId:google.maps.MapTypeId.ROADMAP,
-                    zoom: 16
-                };
-
             this.$el.html(this.template());
+            //this.model = this.model || new RequestModel();
+            this.model.on("change", this.render, this);
+            //this.model = new RequestModel({});
+            // set a listener to the model
+            // this.model.on('change', this.render);
+            // in render clear this.$el or clear the map.
 
-            var myMap = new google.maps.Map($("#map_canvas")[0], options);
+            //var that = this;
+            // specify the element for the target of the click event.
+            // events: {
+            //   "click": "getNewRoute"},
+            //  getNewRoute: fucntion() {
+            //      this.model.origin.......
+            //  }
+            // $("#embarkDirection").on("click", function(e) {
+            //     e.preventDefault();
 
-            //window.console.log(this.model.origin);
-            this.route(myMap);
-            return myMap;
+            //     that.model.origin = $("#startInput").val();
+            //     that.model.destination = $("#endInput").val();
 
+            //     window.console.log(that.request);
+            // });
+            this.render();
+            return this;
         },// end initialize
+
+        events: {
+            "click #embarkDirection" : "getNewRoute"
+        },// end events
+
+        getNewRoute: function() {
+            window.console.log("I've been fired by the click function");
+            this.model.set ({
+                origin : $("#startInput").val(),
+                destination : $("#endInput").val()
+            });
+
+            //this.model.set("destination", $("#endInput").val());
+
+            return this;
+        },// end getNewRoute
+
         route: function(myMap) {
-            console.dir(myMap);
             var directionService = new google.maps.DirectionsService();
             var directionsRenderer = new google.maps.DirectionsRenderer({
                 map: myMap
@@ -24894,16 +24920,18 @@ define('app/views/mapView',[
             //clearBoxes();
 
             // Convert the distance to box around the route from miles to km
-            //var distance = parseFloat(document.getElementById("distance").value) * 1.609344;
-
-            var request = {
-                origin: this.model.origin,
-                destination: this.model.destination,
-                travelMode: google.maps.DirectionsTravelMode.DRIVING
-            };
+            // var distance = parseFloat(document.getElementById("distance").value) * 1.609344;
+            // var that = this;
+            // var directions = {
+            //     origin: that.model.origin,
+            //     destination: that.model.destination,
+            //     travelMode: google.maps.DirectionsTravelMode.DRIVING
+            // });
+            // window.console.dir();
+            // window.console.dir(that.model.toJSON());
 
             // Make the directions request
-            directionService.route(request, function(result, status) {
+            directionService.route(this.model.toJSON(), function(result, status) {
                 if (status == google.maps.DirectionsStatus.OK) {
                     directionsRenderer.setDirections(result);
                     //This is the blue line (path) of the route
@@ -24921,7 +24949,22 @@ define('app/views/mapView',[
             //return boxes;
         },// end route
         render: function() {
+            //this.remove();
+            var options =
+                {
+                    center: new google.maps.LatLng(47.620467 , -122.349116),
+                    mapTypeId:google.maps.MapTypeId.ROADMAP,
+                    zoom: 16
+                };
 
+            var myMap = new google.maps.Map($("#map_canvas")[0], options);
+
+            //window.console.log(this.model.origin);
+            if(this.model.origin && this.model.destination) {
+                this.route(myMap);
+            }
+
+            return myMap;
         }
     });
     return MapView;
@@ -25144,13 +25187,18 @@ define('app/routes/routes',[
 
         },
         index: function() {
-            this.indexView = new IndexView();
+            this.indexView = new IndexView({model: new RequestModel()});
         },
         map: function() {
-            window.console.log("inside of map routes function");
-            var that = this;
-            this.mapView = new MapView({model: that.indexView.request});
-
+            var request;
+            window.console.dir(this.indexView);
+            if(this.indexView) {
+                request = this.indexView.model;
+            } else {
+                request = new RequestModel();
+            }
+            window.console.dir(request);
+            this.mapView = new MapView({model: request});
         },
         pitstops: function() {
             this.collection = new Backbone.Collection();

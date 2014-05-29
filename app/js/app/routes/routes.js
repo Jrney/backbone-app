@@ -216,13 +216,18 @@ define([
 
         },
         index: function() {
-            this.indexView = new IndexView();
+            this.indexView = new IndexView({model: new RequestModel()});
         },
         map: function() {
-            window.console.log("inside of map routes function");
-            var that = this;
-            this.mapView = new MapView({model: that.indexView.request});
-
+            var request;
+            window.console.dir(this.indexView);
+            if(this.indexView) {
+                request = this.indexView.model;
+            } else {
+                request = new RequestModel();
+            }
+            window.console.dir(request);
+            this.mapView = new MapView({model: request});
         },
         pitstops: function() {
             this.collection = new Backbone.Collection();
