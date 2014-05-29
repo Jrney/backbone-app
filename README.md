@@ -14,3 +14,5 @@ Starting point for the Code Fellows "Along the Way" group project.
 * Mongoose
 
 See branches for development progress.
+
+This is the development branch that Nick is using to build the full skeleton for the Jrney Map app.
