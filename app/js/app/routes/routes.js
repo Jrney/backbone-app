@@ -222,7 +222,7 @@ define([
             window.console.log("Pipin is in indexView");
         },
         map: function() {
-            var mapView = new MapView;
+            var mapView = new MapView();
             $("#viewWrapper").append(mapView.render().el);
         },
         pitstops: function() {
