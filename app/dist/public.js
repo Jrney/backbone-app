@@ -19802,6 +19802,29 @@ if ( typeof define === 'function' && define.amd ) {
 })( window );
 
 
+define('app/models/pitstopModel',["backbone"], function(Backbone) {
+    var PitstopModel = Backbone.Model.extend({
+        defaults: {
+            id: "",
+            name: "",
+            address: "",
+            rating: "",
+        }
+    });
+    return PitstopModel;
+});
+define('app/collections/pitstopCollection',[
+        "backbone",
+        "app/models/pitstopModel"
+], function(
+    Backbone,
+    PitstopModel
+){
+    var PitstopCollection = Backbone.Collection.extend({
+        model: PitstopModel
+    });
+    return PitstopCollection;
+});
 // Begin AMD Wrapper
 define('hbs/handlebars',[],function(){
 // End AMD Wrapper
@@ -24626,6 +24649,21 @@ define('hbs',[
 ;
 
 /* START_TEMPLATE */
+define('hbs!app/templates/pitstops',['hbs','hbs/handlebars'], function( hbs, Handlebars ){ 
+var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers);
+  
+
+
+  return "<div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">\n    <div class=\"container\">\n        <div class=\"navbar-header\">\n            <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">\n                <span class=\"sr-only\">Toggle navigation</span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n            </button>\n            <a class=\"navbar-brand\" href=\"#\">Jrney</a>\n        </div>\n        <div class=\"collapse navbar-collapse\">\n            <form class=\"form-inline navForm\" role=\"form\">\n                <div class=\"form-group\">\n                    <label for=\"startingSelect\" class=\"\">Origin</label>\n                        <select name=\"startingSelect\" class=\"form-control\">\n                            <option value=\"Seattle\">Seattle</option>\n                            <option value=\"Portland\">Portland</option>\n                            <option value=\"Yakima\">Yakima</option>\n                            <option value=\"MtVernon\">Mt. Vernon</option>\n                        </select>\n                </div>\n                <div class=\"form-group\">\n                    <label for=\"endingSelect\" class=\"\">Finish</label>\n                        <select name=\"endingSelect\" class=\"form-control\">\n                            <option value=\"Seattle\">Seattle</option>\n                            <option value=\"Portland\">Portland</option>\n                            <option value=\"Yakima\">Yakima</option>\n                            <option value=\"MtVernon\">Mt. Vernon</option>\n                        </select>\n                </div>\n                <a href=\"/map.html\" class=\"btn btn-primary\">Embark</a>\n            </form>\n<!-- end .navForm -->\n        </div><!--/.nav-collapse -->\n    </div>\n</div>\n<!-- end .navbar -->\n<div id=\"container\" class=\"container group\">\n    <h2>Pitstops</h2>\n    <div id=\"pitstopsContainer\" class=\"container\">\n\n    </div>\n</div>\n<!-- end #conttainer -->\n<footer class=\"container\">\n    <small>All Rights Reserved &copy; 2014</small>\n</footer>";
+  });
+return t;
+});
+/* END_TEMPLATE */
+;
+
+/* START_TEMPLATE */
 define('hbs!app/templates/pitstop',['hbs','hbs/handlebars'], function( hbs, Handlebars ){ 
 var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
@@ -24656,30 +24694,6 @@ return t;
 });
 /* END_TEMPLATE */
 ;
-define('app/models/pitstopModel',["backbone"], function(Backbone) {
-    var PitstopModel = Backbone.Model.extend({
-        defaults: {
-            id: "",
-            name: "",
-            address: "",
-            rating: "",
-        }
-    });
-    return PitstopModel;
-});
-
-define('app/collections/pitstopCollection',[
-        "backbone",
-        "app/models/pitstopModel"
-], function(
-    Backbone,
-    PitstopModel
-){
-    var PitstopCollection = Backbone.Collection.extend({
-        model: PitstopModel
-    });
-    return PitstopCollection;
-});
 define('pitstopView',[
     "backbone",
     "hbs!app/templates/pitstop",
@@ -24694,8 +24708,8 @@ define('pitstopView',[
 
 
     var PitstopView = Backbone.View.extend({
-        tagName: 'article',
-        className: 'item',
+        tagName: "article",
+        className: "item",
         template: pitstopTmpl,
         initialize: function () {
 
@@ -24707,21 +24721,6 @@ define('pitstopView',[
     });
     return PitstopView;
 });
-
-/* START_TEMPLATE */
-define('hbs!app/templates/pitstops',['hbs','hbs/handlebars'], function( hbs, Handlebars ){ 
-var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Handlebars.helpers);
-  
-
-
-  return "<h2>Pitstops</h2>\n<div id=\"pitstopsContainer\" class=\"container\">\n\n</div>";
-  });
-return t;
-});
-/* END_TEMPLATE */
-;
 define('app/views/pitstopCollectionView',[
     "backbone",
     "hbs!app/templates/pitstops",
@@ -24732,7 +24731,7 @@ define('app/views/pitstopCollectionView',[
     PitstopView
 ) {
     var PitstopCollectionView = Backbone.View.extend({
-        el: "#container",
+        el: "#viewWrapper",
         template: pitstopsTmpl,
         initialize: function() {
             this.render();
@@ -24765,7 +24764,7 @@ helpers = this.merge(helpers, Handlebars.helpers);
   
 
 
-  return "<form class=\"form-horizontal homepageForm\" role=\"form\">\n    <div class=\"form-group\">\n        <label for=\"startingSelect\" class=\"col-sm-3 control-label\">Origin</label>\n        <div class=\"col-sm-9\">\n            <select name=\"startingSelect\" class=\"form-control\">\n                <option value=\"Seattle\">Seattle</option>\n                <option value=\"Portland\">Portland</option>\n                <option value=\"Yakima\">Yakima</option>\n                <option value=\"MtVernon\">Mt. Vernon</option>\n            </select>\n        </div>\n    </div>\n    <div class=\"form-group\">\n        <label for=\"endingSelect\" class=\"col-sm-3 control-label\">Finish</label>\n        <div class=\"col-sm-9\">\n            <select name=\"endingSelect\" class=\"form-control\">\n                <option value=\"Seattle\">Seattle</option>\n                <option value=\"Portland\">Portland</option>\n                <option value=\"Yakima\">Yakima</option>\n                <option value=\"MtVernon\">Mt. Vernon</option>\n            </select>\n        </div>\n    </div>\n    <a href=\"/map.html\" class=\"btn btn-primary\">Embark</a>\n</form>";
+  return "<div class=\"homepage\">\n    <form class=\"form-horizontal homepageForm\" role=\"form\">\n        <div class=\"form-group\">\n            <label for=\"startingSelect\" class=\"col-sm-3 control-label\">Origin</label>\n            <div class=\"col-sm-9\">\n                <select name=\"startingSelect\" class=\"form-control\">\n                    <option value=\"Seattle\">Seattle</option>\n                    <option value=\"Portland\">Portland</option>\n                    <option value=\"Yakima\">Yakima</option>\n                    <option value=\"MtVernon\">Mt. Vernon</option>\n                </select>\n            </div>\n        </div>\n        <div class=\"form-group\">\n            <label for=\"endingSelect\" class=\"col-sm-3 control-label\">Finish</label>\n            <div class=\"col-sm-9\">\n                <select name=\"endingSelect\" class=\"form-control\">\n                    <option value=\"Seattle\">Seattle</option>\n                    <option value=\"Portland\">Portland</option>\n                    <option value=\"Yakima\">Yakima</option>\n                    <option value=\"MtVernon\">Mt. Vernon</option>\n                </select>\n            </div>\n        </div>\n        <a href=\"/map\" class=\"btn btn-primary\">Embark</a>\n    </form>\n</div>\n";
   });
 return t;
 });
@@ -24779,7 +24778,7 @@ define('app/views/indexView',[
     indexTmpl
 ) {
     var IndexView = Backbone.View.extend({
-        el: ".homepage",
+        el: "#viewWrapper",
         template: indexTmpl,
         initialize: function() {
             this.render();
@@ -24791,18 +24790,141 @@ define('app/views/indexView',[
     });
     return IndexView;
 });
+/** @license
+ * RequireJS plugin for async dependency load like JSONP and Google Maps
+ * Author: Miller Medeiros
+ * Version: 0.1.1 (2011/11/17)
+ * Released under the MIT license
+ */
+define('async',[],function(){
+
+    var DEFAULT_PARAM_NAME = 'callback',
+        _uid = 0;
+
+    function injectScript(src){
+        var s, t;
+        s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = src;
+        t = document.getElementsByTagName('script')[0]; t.parentNode.insertBefore(s,t);
+    }
+
+    function formatUrl(name, id){
+        var paramRegex = /!(.+)/,
+            url = name.replace(paramRegex, ''),
+            param = (paramRegex.test(name))? name.replace(/.+!/, '') : DEFAULT_PARAM_NAME;
+        url += (url.indexOf('?') < 0)? '?' : '&';
+        return url + param +'='+ id;
+    }
+
+    function uid() {
+        _uid += 1;
+        return '__async_req_'+ _uid +'__';
+    }
+
+    return{
+        load : function(name, req, onLoad, config){
+            if(config.isBuild){
+                onLoad(null); //avoid errors on the optimizer
+            }else{
+                var id = uid();
+                //create a global variable that stores onLoad so callback
+                //function can define new module after async load
+                window[id] = onLoad;
+                injectScript(formatUrl(name, id));
+            }
+        }
+    };
+});
+
+
+define('app/models/mapModel',["backbone", "async!http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places"], function(Backbone) {
+    var MapModel = Backbone.Model.extend({
+        default: {
+            center: new google.maps.LatLng(37.09024, -95.712891),
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            zoom: 4
+        }
+    });
+    return MapModel;
+});
+
+/* START_TEMPLATE */
+define('hbs!app/templates/map',['hbs','hbs/handlebars'], function( hbs, Handlebars ){ 
+var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers);
+  
+
+
+  return "<div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">\n    <div class=\"container\">\n        <div class=\"navbar-header\">\n            <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">\n                <span class=\"sr-only\">Toggle navigation</span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n            </button>\n            <a class=\"navbar-brand\" href=\"#\">Jrney</a>\n        </div>\n        <div class=\"collapse navbar-collapse\">\n            <form class=\"form-inline navForm\" role=\"form\">\n                <div class=\"form-group\">\n                    <label for=\"startingSelect\" class=\"\">Origin</label>\n                        <select name=\"startingSelect\" class=\"form-control\">\n                            <option value=\"Seattle\">Seattle</option>\n                            <option value=\"Portland\">Portland</option>\n                            <option value=\"Yakima\">Yakima</option>\n                            <option value=\"MtVernon\">Mt. Vernon</option>\n                        </select>\n                </div>\n                <div class=\"form-group\">\n                    <label for=\"endingSelect\" class=\"\">Finish</label>\n                        <select name=\"endingSelect\" class=\"form-control\">\n                            <option value=\"Seattle\">Seattle</option>\n                            <option value=\"Portland\">Portland</option>\n                            <option value=\"Yakima\">Yakima</option>\n                            <option value=\"MtVernon\">Mt. Vernon</option>\n                        </select>\n                </div>\n                <a href=\"/map.html\" class=\"btn btn-primary\">Embark</a>\n            </form>\n<!-- end .navForm -->\n        </div><!--/.nav-collapse -->\n    </div>\n</div>\n<!-- end .navbar -->\n<div class=\"pageHeader\">\n    <h1>Codefellows Project to be named later</h1>\n    <h2 class=\"lead\">This will be some wonderful text about the app and what it does<br> It will be the subheader for the project so we can get our semantic mark up going.</h2>\n</div>\n<div class=\"row\">\n    <div class=\"col-md-8 categoryButtons\">\n        <p><b>Filter by:</b></p>\n        <a href=\"#\" class=\"btn btn-primary\">MOHI</a>\n        <a id=\"foodButton\" href=\"#\" class=\"btn btn-default\">Food</a>\n        <a href=\"#\" class=\"btn btn-default\">Clothes</a>\n        <a href=\"#\" class=\"btn btn-default\">Gas</a>\n    </div>\n    <div class=\"col-md-4 pitstopButton\">\n        <p>Look at the details of your options.</p>\n        <a href=\"/pitstops.html\" class=\"btn btn-lg btn-info\">Pitstops</a>\n    </div>\n</div>\n<div class=\"row\">\n    <div class=\"col-md-12 mapInfoContainer\">\n        <div id=\"map_canvas\">\n\n        </div>\n    </div>\n</div>\n<footer class=\"container\">\n    <small>All Rights Reserved &copy; 2014</small>\n</footer>";
+  });
+return t;
+});
+/* END_TEMPLATE */
+;
+define('app/views/mapView',[
+        "backbone",
+        "jquery",
+        "hbs!app/templates/map"
+        //"app/models/mapModel"
+], function(
+        Backbone,
+        $,
+        mapTmpl
+        //MapModel
+) {
+
+    var MapView = Backbone.View.extend({
+        el: "#viewWrapper",
+        template: mapTmpl,
+
+        initialize: function() {
+            // 1. set the template to $el
+            // 2. create a new map
+            // 3. append map to template
+            // 4. in router, create a new view
+            //
+            window.console.log("inside of initialize");
+
+            var options =
+                {
+                    center: new google.maps.LatLng(47.620467 , -122.349116),
+                    mapTypeId:google.maps.MapTypeId.ROADMAP,
+                    zoom: 16
+                };
+
+            this.$el.html(this.template());
+
+            window.console.log("about to log this.$el :");
+            window.console.dir(this.$el);
+            var myMap = new google.maps.Map($("#map_canvas")[0], options);
+
+            window.console.log("why isn't watch working?");
+
+            return myMap;
+
+        },
+        render: function() {
+
+        }
+    });
+    return MapView;
+});
 define('app/routes/routes',[
     "backbone",
     "../collections/pitstopCollection",
     "../models/pitstopModel",
     "../views/pitstopCollectionView",
-    "../views/indexView"
+    "../views/indexView",
+    "../models/mapModel",
+    "../views/mapView"
 ], function(
     Backbone,
     PitstopCollection,
     PitstopModel,
     PitstopCollectionView,
-    IndexView
+    IndexView,
+    MapModel,
+    MapView
 ) {
     var fakeGoogleJson =
         [
@@ -24990,30 +25112,33 @@ define('app/routes/routes',[
             }
        ];
 
-    var PitstopRouter = Backbone.Router.extend({
+    var AppRouter = Backbone.Router.extend({
         routes: {
             "" : "index",
             "map" : "map",
+            "pitstops"  : "pitstops"
         },
         start: function() {
             Backbone.history.start();
         },
         initialize: function() {
-            this.collection = new Backbone.Collection;
-            this.collection.reset(fakeGoogleJson);
 
-            this.pitstopView = new PitstopCollectionView({
-                collection: this.collection
-            });
         },
         index: function() {
             this.indexView = new IndexView({});
-            console.dir(this.indexView);
+            //console.dir(this.indexView);
             this.indexView.initialize();
-            console.log("Pipin is in indexView");
+            window.console.log("Pipin is in indexView");
         },
         map: function() {
-            this.collection = new Backbone.Collection;
+            window.console.log("inside of map routes function");
+            this.mapView = new MapView({});
+            window.console.log("about to console.dir this.mapView: ");
+            window.console.dir(this.mapView);
+            this.mapView.initialize();
+        },
+        pitstops: function() {
+            this.collection = new Backbone.Collection();
             this.collection.reset(fakeGoogleJson);
 
             this.pitstopView = new PitstopCollectionView({
@@ -25021,21 +25146,19 @@ define('app/routes/routes',[
             });
         }
     });
-    return PitstopRouter;
+    return AppRouter;
 
 });
 define('client',[
-    'jquery',
-    'backbone',
-    'isotope',
-    'pitstopView',
+    "jquery",
+    "backbone",
+    "isotope",
     "app/routes/routes"
 ], function(
     $,
     Backbone,
     Isotope,
-    PitstopView,
-    PitstopRouter
+    AppRouter
 ) {
     //ISOTOPE
     // var iso = new Isotope ("#container", {
@@ -25046,8 +25169,8 @@ define('client',[
     //     }
     // });
     $(function() {
-        console.log("samwise likes app.js");
-        var router = new PitstopRouter();
+        window.console.log("samwise likes app.js");
+        var router = new AppRouter();
         router.start();
     });
 });
@@ -25066,23 +25189,22 @@ define('client',[
             "underscore": "vendor/lodash.underscore",
             "hbs": "vendor/hbs/hbs",
             "async": "vendor/async",
-            "google": "google",
+            "goog": "vendor/goog",
+            "propertyParser": "vendor/propertyParser",
             "isotope": "vendor/isotope.pkgd",
             "backbone": "vendor/backbone",
+            "gmaps": "http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places",
 
             // application libraries
             "client": "app/app",
             "scripts": "app/scripts",
-            "maps": "app/customMaps",
-            "pitstopView": "app/views/pitstopView",
-            "pitstopModel": "app/models/pitstopModel"
-
+            "pitstopView": "app/views/pitstopView"
         }
     });
-    require(['scripts'], function(){});
-    require(['client'], function(){});
+    require(["scripts"], function(){});
+    require(["client"], function(){});
+    //require(["async!http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places"], function(){});
     //require(['maps'], function(){});
 }());
-
 define("config", function(){});
 

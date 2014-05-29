@@ -3,13 +3,17 @@ define([
     "../collections/pitstopCollection",
     "../models/pitstopModel",
     "../views/pitstopCollectionView",
-    "../views/indexView"
+    "../views/indexView",
+    "../models/mapModel",
+    "../views/mapView"
 ], function(
     Backbone,
     PitstopCollection,
     PitstopModel,
     PitstopCollectionView,
-    IndexView
+    IndexView,
+    MapModel,
+    MapView
 ) {
     var fakeGoogleJson =
         [
@@ -197,30 +201,33 @@ define([
             }
        ];
 
-    var PitstopRouter = Backbone.Router.extend({
+    var AppRouter = Backbone.Router.extend({
         routes: {
             "" : "index",
             "map" : "map",
+            "pitstops"  : "pitstops"
         },
         start: function() {
             Backbone.history.start();
         },
         initialize: function() {
-            this.collection = new Backbone.Collection;
-            this.collection.reset(fakeGoogleJson);
 
-            this.pitstopView = new PitstopCollectionView({
-                collection: this.collection
-            });
         },
         index: function() {
             this.indexView = new IndexView({});
-            console.dir(this.indexView);
+            //console.dir(this.indexView);
             this.indexView.initialize();
-            console.log("Pipin is in indexView");
+            window.console.log("Pipin is in indexView");
         },
         map: function() {
-            this.collection = new Backbone.Collection;
+            window.console.log("inside of map routes function");
+            this.mapView = new MapView({});
+            window.console.log("about to console.dir this.mapView: ");
+            window.console.dir(this.mapView);
+            this.mapView.initialize();
+        },
+        pitstops: function() {
+            this.collection = new Backbone.Collection();
             this.collection.reset(fakeGoogleJson);
 
             this.pitstopView = new PitstopCollectionView({
@@ -228,6 +235,6 @@ define([
             });
         }
     });
-    return PitstopRouter;
+    return AppRouter;
 
 });

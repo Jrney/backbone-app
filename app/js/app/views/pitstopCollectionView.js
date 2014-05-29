@@ -8,7 +8,7 @@ define([
     PitstopView
 ) {
     var PitstopCollectionView = Backbone.View.extend({
-        el: "#container",
+        el: "#viewWrapper",
         template: pitstopsTmpl,
         initialize: function() {
             this.render();
