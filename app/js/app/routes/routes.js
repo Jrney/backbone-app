@@ -5,7 +5,8 @@ define([
     "../views/pitstopCollectionView",
     "../views/indexView",
     "../models/mapModel",
-    "../views/mapView"
+    "../views/mapView",
+    "../models/requestModel"
 ], function(
     Backbone,
     PitstopCollection,
@@ -13,7 +14,8 @@ define([
     PitstopCollectionView,
     IndexView,
     MapModel,
-    MapView
+    MapView,
+    RequestModel
 ) {
     var fakeGoogleJson =
         [
@@ -214,17 +216,13 @@ define([
 
         },
         index: function() {
-            this.indexView = new IndexView({});
-            //console.dir(this.indexView);
-            this.indexView.initialize();
-            window.console.log("Pipin is in indexView");
+            this.indexView = new IndexView();
         },
         map: function() {
             window.console.log("inside of map routes function");
-            this.mapView = new MapView({});
-            window.console.log("about to console.dir this.mapView: ");
-            window.console.dir(this.mapView);
-            this.mapView.initialize();
+            var that = this;
+            this.mapView = new MapView({request: that.indexView.request});
+
         },
         pitstops: function() {
             this.collection = new Backbone.Collection();

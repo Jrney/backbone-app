@@ -1,12 +1,14 @@
 define([
         "backbone",
         "jquery",
-        "hbs!app/templates/map"
+        "hbs!app/templates/map",
+        "app/models/requestModel"
         //"app/models/mapModel"
 ], function(
         Backbone,
         $,
-        mapTmpl
+        mapTmpl,
+        RequestModel
         //MapModel
 ) {
 

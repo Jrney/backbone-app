@@ -24764,24 +24764,62 @@ helpers = this.merge(helpers, Handlebars.helpers);
   
 
 
-  return "<div class=\"homepage\">\n    <form class=\"form-horizontal homepageForm\" role=\"form\">\n        <div class=\"form-group\">\n            <label for=\"startingSelect\" class=\"col-sm-3 control-label\">Origin</label>\n            <div class=\"col-sm-9\">\n                <select name=\"startingSelect\" class=\"form-control\">\n                    <option value=\"Seattle\">Seattle</option>\n                    <option value=\"Portland\">Portland</option>\n                    <option value=\"Yakima\">Yakima</option>\n                    <option value=\"MtVernon\">Mt. Vernon</option>\n                </select>\n            </div>\n        </div>\n        <div class=\"form-group\">\n            <label for=\"endingSelect\" class=\"col-sm-3 control-label\">Finish</label>\n            <div class=\"col-sm-9\">\n                <select name=\"endingSelect\" class=\"form-control\">\n                    <option value=\"Seattle\">Seattle</option>\n                    <option value=\"Portland\">Portland</option>\n                    <option value=\"Yakima\">Yakima</option>\n                    <option value=\"MtVernon\">Mt. Vernon</option>\n                </select>\n            </div>\n        </div>\n        <a href=\"/map\" class=\"btn btn-primary\">Embark</a>\n    </form>\n</div>\n";
+  return "<div class=\"homepage\">\n    <form class=\"form-horizontal homepageForm\" role=\"form\">\n        <div class=\"form-group\">\n            <label for=\"startingSelect\" class=\"col-sm-3 control-label\">Origin</label>\n            <div class=\"col-sm-9\">\n                <input id=\"startInput\" type=\"text\" name=\"startPoint\" value=\"\" placeholder=\"start point\">\n            </div>\n        </div>\n        <div class=\"form-group\">\n            <label for=\"endingSelect\" class=\"col-sm-3 control-label\">Finish</label>\n            <div class=\"col-sm-9\">\n                <input id=\"endInput\" type=\"text\" name=\"endPoint\" value=\"\" placeholder=\"end point\">\n            </div>\n        </div>\n        <a id=\"embarkDirection\" href=\"/map\" class=\"btn btn-primary\">Embark</a>\n    </form>\n</div>\n";
   });
 return t;
 });
 /* END_TEMPLATE */
 ;
-define('app/views/indexView',[
+define('app/models/requestModel',[
     "backbone",
-    "hbs!app/templates/index"
+    "jquery"
 ], function(
     Backbone,
-    indexTmpl
+    $
+) {
+    var RequestModel = Backbone.Model.extend({
+        defaults: {
+            origin: "",
+            destination: "",
+            travelMode: google.maps.DirectionsTravelMode.DRIVING
+        }
+    });
+    return RequestModel;
+});
+define('app/views/indexView',[
+    "backbone",
+    "hbs!app/templates/index",
+    "jquery",
+    "app/models/requestModel",
+    "app/routes/routes"
+], function(
+    Backbone,
+    indexTmpl,
+    $,
+    RequestModel,
+    Router
 ) {
     var IndexView = Backbone.View.extend({
         el: "#viewWrapper",
         template: indexTmpl,
         initialize: function() {
             this.render();
+            this.request = new RequestModel();
+            var that = this;
+            $("#embarkDirection").on("click", function(e) {
+                e.preventDefault();
+
+                window.console.log(that.request);
+                that.request.origin = $("#startInput").val();
+                that.request.destination = $("#endInput").val();
+
+                window.console.log(that.request.origin);
+                // backbone.naviage trigger = true;
+                // backbone events vs click events;
+                window.console.log(Router);
+                Backbone.history.navigate("map", {trigger: true});
+            });
+
         },
         render: function() {
             this.$el.html(this.template());
@@ -24790,53 +24828,7 @@ define('app/views/indexView',[
     });
     return IndexView;
 });
-/** @license
- * RequireJS plugin for async dependency load like JSONP and Google Maps
- * Author: Miller Medeiros
- * Version: 0.1.1 (2011/11/17)
- * Released under the MIT license
- */
-define('async',[],function(){
-
-    var DEFAULT_PARAM_NAME = 'callback',
-        _uid = 0;
-
-    function injectScript(src){
-        var s, t;
-        s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = src;
-        t = document.getElementsByTagName('script')[0]; t.parentNode.insertBefore(s,t);
-    }
-
-    function formatUrl(name, id){
-        var paramRegex = /!(.+)/,
-            url = name.replace(paramRegex, ''),
-            param = (paramRegex.test(name))? name.replace(/.+!/, '') : DEFAULT_PARAM_NAME;
-        url += (url.indexOf('?') < 0)? '?' : '&';
-        return url + param +'='+ id;
-    }
-
-    function uid() {
-        _uid += 1;
-        return '__async_req_'+ _uid +'__';
-    }
-
-    return{
-        load : function(name, req, onLoad, config){
-            if(config.isBuild){
-                onLoad(null); //avoid errors on the optimizer
-            }else{
-                var id = uid();
-                //create a global variable that stores onLoad so callback
-                //function can define new module after async load
-                window[id] = onLoad;
-                injectScript(formatUrl(name, id));
-            }
-        }
-    };
-});
-
-
-define('app/models/mapModel',["backbone", "async!http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places"], function(Backbone) {
+define('app/models/mapModel',["backbone"], function(Backbone) {
     var MapModel = Backbone.Model.extend({
         default: {
             center: new google.maps.LatLng(37.09024, -95.712891),
@@ -24864,12 +24856,14 @@ return t;
 define('app/views/mapView',[
         "backbone",
         "jquery",
-        "hbs!app/templates/map"
+        "hbs!app/templates/map",
+        "app/models/requestModel"
         //"app/models/mapModel"
 ], function(
         Backbone,
         $,
-        mapTmpl
+        mapTmpl,
+        RequestModel
         //MapModel
 ) {
 
@@ -24878,11 +24872,7 @@ define('app/views/mapView',[
         template: mapTmpl,
 
         initialize: function() {
-            // 1. set the template to $el
-            // 2. create a new map
-            // 3. append map to template
-            // 4. in router, create a new view
-            //
+
             window.console.log("inside of initialize");
 
             var options =
@@ -24898,7 +24888,7 @@ define('app/views/mapView',[
             window.console.dir(this.$el);
             var myMap = new google.maps.Map($("#map_canvas")[0], options);
 
-            window.console.log("why isn't watch working?");
+            window.console.log("why isn't watch running in the Gruntfile?");
 
             return myMap;
 
@@ -24916,7 +24906,8 @@ define('app/routes/routes',[
     "../views/pitstopCollectionView",
     "../views/indexView",
     "../models/mapModel",
-    "../views/mapView"
+    "../views/mapView",
+    "../models/requestModel"
 ], function(
     Backbone,
     PitstopCollection,
@@ -24924,7 +24915,8 @@ define('app/routes/routes',[
     PitstopCollectionView,
     IndexView,
     MapModel,
-    MapView
+    MapView,
+    RequestModel
 ) {
     var fakeGoogleJson =
         [
@@ -25125,17 +25117,13 @@ define('app/routes/routes',[
 
         },
         index: function() {
-            this.indexView = new IndexView({});
-            //console.dir(this.indexView);
-            this.indexView.initialize();
-            window.console.log("Pipin is in indexView");
+            this.indexView = new IndexView();
         },
         map: function() {
             window.console.log("inside of map routes function");
-            this.mapView = new MapView({});
-            window.console.log("about to console.dir this.mapView: ");
-            window.console.dir(this.mapView);
-            this.mapView.initialize();
+            var that = this;
+            this.mapView = new MapView({request: that.indexView.request});
+
         },
         pitstops: function() {
             this.collection = new Backbone.Collection();
