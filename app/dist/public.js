@@ -24708,8 +24708,8 @@ define('pitstopView',[
 
 
     var PitstopView = Backbone.View.extend({
-        tagName: 'article',
-        className: 'item',
+        tagName: "article",
+        className: "item",
         template: pitstopTmpl,
         initialize: function () {
 
@@ -24836,7 +24836,7 @@ define('async',[],function(){
 });
 
 
-define('app/models/mapModel',['backbone', 'async!http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places'], function(Backbone) {
+define('app/models/mapModel',["backbone", "async!http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places"], function(Backbone) {
     var MapModel = Backbone.Model.extend({
         default: {
             center: new google.maps.LatLng(37.09024, -95.712891),
@@ -24847,55 +24847,41 @@ define('app/models/mapModel',['backbone', 'async!http://maps.googleapis.com/maps
     return MapModel;
 });
 
-/* START_TEMPLATE */
-define('hbs!app/templates/map',['hbs','hbs/handlebars'], function( hbs, Handlebars ){ 
-var t = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Handlebars.helpers);
-  
-
-
-  return "<div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">\n    <div class=\"container\">\n        <div class=\"navbar-header\">\n            <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">\n                <span class=\"sr-only\">Toggle navigation</span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n            </button>\n            <a class=\"navbar-brand\" href=\"#\">Jrney</a>\n        </div>\n        <div class=\"collapse navbar-collapse\">\n            <form class=\"form-inline navForm\" role=\"form\">\n                <div class=\"form-group\">\n                    <label for=\"startingSelect\" class=\"\">Origin</label>\n                        <select name=\"startingSelect\" class=\"form-control\">\n                            <option value=\"Seattle\">Seattle</option>\n                            <option value=\"Portland\">Portland</option>\n                            <option value=\"Yakima\">Yakima</option>\n                            <option value=\"MtVernon\">Mt. Vernon</option>\n                        </select>\n                </div>\n                <div class=\"form-group\">\n                    <label for=\"endingSelect\" class=\"\">Finish</label>\n                        <select name=\"endingSelect\" class=\"form-control\">\n                            <option value=\"Seattle\">Seattle</option>\n                            <option value=\"Portland\">Portland</option>\n                            <option value=\"Yakima\">Yakima</option>\n                            <option value=\"MtVernon\">Mt. Vernon</option>\n                        </select>\n                </div>\n                <a href=\"/map.html\" class=\"btn btn-primary\">Embark</a>\n            </form>\n<!-- end .navForm -->\n        </div><!--/.nav-collapse -->\n    </div>\n</div>\n<!-- end .navbar -->\n<div class=\"pageHeader\">\n    <h1>Codefellows Project to be named later</h1>\n    <h2 class=\"lead\">This will be some wonderful text about the app and what it does<br> It will be the subheader for the project so we can get our semantic mark up going.</h2>\n</div>\n<div class=\"row\">\n    <div class=\"col-md-8 categoryButtons\">\n        <p><b>Filter by:</b></p>\n        <a href=\"#\" class=\"btn btn-primary\">MOHI</a>\n        <a id=\"foodButton\" href=\"#\" class=\"btn btn-default\">Food</a>\n        <a href=\"#\" class=\"btn btn-default\">Clothes</a>\n        <a href=\"#\" class=\"btn btn-default\">Gas</a>\n    </div>\n    <div class=\"col-md-4 pitstopButton\">\n        <p>Look at the details of your options.</p>\n        <a href=\"/pitstops.html\" class=\"btn btn-lg btn-info\">Pitstops</a>\n    </div>\n</div>\n<div class=\"row\">\n    <div class=\"col-md-12 mapInfoContainer\">\n        <div id=\"map_canvas\">\n\n        </div>\n    </div>\n</div>\n<footer class=\"container\">\n    <small>All Rights Reserved &copy; 2014</small>\n</footer>";
-  });
-return t;
-});
-/* END_TEMPLATE */
-;
-define('app/views/mapView',[
+require([
         "backbone",
-        "hbs!app/templates/map",
-        "app/models/mapModel"
+        "jquery",
+        "underscore",
+        "async!http://maps.google.com/maps/api/js?sensor=false"
+        //"async!http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places"
 ], function(
         Backbone,
-        mapTmpl,
-        MapModel
+        $,
+        _
 ) {
 
     var MapView = Backbone.View.extend({
-        el: "#viewWrapper",
-        template: mapTmpl,
+        _map: null,
 
+        render: function(){
 
-        initialize: function() {
-            console.log('inside of initMap');
-            var options = [{center: new google.maps.LatLng(37.09024, -95.712891), mapTypeId:google.maps.MapTypeId.ROADMAP, zoom: 4 }];
-
-            var myMap = new google.maps.Map($('#map_canvas'), options);
-            console.log("was the map returned?");
-            this.render();
-        },
-        render: function() {
-            console.log("inside of the render funtion in mapsView");
-
-            this.$el.html(this.template(this.model.toJSON()));
-
-            return this;
+            this.$el.css({width:600, height:400});
+            this.map = new google.maps.Map(this.el,{
+                zoom:16,
+                center: new google.maps.LatLng(43.81451767218152, -91.25057458877563),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+          return this;
         }
     });
     return MapView;
 });
+
+
+define("app/views/mapView", function(){});
+
 define('app/routes/routes',[
     "backbone",
+    "jquery",
     "../collections/pitstopCollection",
     "../models/pitstopModel",
     "../views/pitstopCollectionView",
@@ -24904,6 +24890,7 @@ define('app/routes/routes',[
     "../views/mapView"
 ], function(
     Backbone,
+    $,
     PitstopCollection,
     PitstopModel,
     PitstopCollectionView,
@@ -25113,17 +25100,14 @@ define('app/routes/routes',[
             this.indexView = new IndexView({});
             //console.dir(this.indexView);
             this.indexView.initialize();
-            console.log("Pipin is in indexView");
+            window.console.log("Pipin is in indexView");
         },
         map: function() {
-            this.mapModel = new MapModel();
-            this.mapView = new MapView({
-                model: this.mapModel
-            });
-            this.mapView.render();
+            var mapView = new MapView;
+            $("#viewWrapper").append(mapView.render().el);
         },
         pitstops: function() {
-            this.collection = new Backbone.Collection;
+            this.collection = new Backbone.Collection();
             this.collection.reset(fakeGoogleJson);
 
             this.pitstopView = new PitstopCollectionView({
@@ -25135,9 +25119,9 @@ define('app/routes/routes',[
 
 });
 define('client',[
-    'jquery',
-    'backbone',
-    'isotope',
+    "jquery",
+    "backbone",
+    "isotope",
     "app/routes/routes"
 ], function(
     $,
@@ -25154,7 +25138,7 @@ define('client',[
     //     }
     // });
     $(function() {
-        console.log("samwise likes app.js");
+        window.console.log("samwise likes app.js");
         var router = new AppRouter();
         router.start();
     });
@@ -25174,20 +25158,21 @@ define('client',[
             "underscore": "vendor/lodash.underscore",
             "hbs": "vendor/hbs/hbs",
             "async": "vendor/async",
-            "google": "google",
+            "goog": "vendor/goog",
+            "propertyParser": "vendor/propertyParser",
             "isotope": "vendor/isotope.pkgd",
             "backbone": "vendor/backbone",
+            "gmaps": "http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places",
 
             // application libraries
             "client": "app/app",
             "scripts": "app/scripts",
-            "maps": "app/customMaps",
             "pitstopView": "app/views/pitstopView"
         }
     });
-    require(['scripts'], function(){});
-    require(['client'], function(){});
-    require(['async!http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places'], function(){});
+    require(["scripts"], function(){});
+    require(["client"], function(){});
+    //require(['async!http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places'], function(){});
     //require(['maps'], function(){});
 }());
 define("config", function(){});

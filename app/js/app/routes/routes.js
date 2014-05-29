@@ -1,5 +1,6 @@
 define([
     "backbone",
+    "jquery",
     "../collections/pitstopCollection",
     "../models/pitstopModel",
     "../views/pitstopCollectionView",
@@ -8,6 +9,7 @@ define([
     "../views/mapView"
 ], function(
     Backbone,
+    $,
     PitstopCollection,
     PitstopModel,
     PitstopCollectionView,
@@ -217,17 +219,14 @@ define([
             this.indexView = new IndexView({});
             //console.dir(this.indexView);
             this.indexView.initialize();
-            console.log("Pipin is in indexView");
+            window.console.log("Pipin is in indexView");
         },
         map: function() {
-            this.mapModel = new MapModel();
-            this.mapView = new MapView({
-                model: this.mapModel
-            });
-            this.mapView.render();
+            var mapView = new MapView;
+            $("#viewWrapper").append(mapView.render().el);
         },
         pitstops: function() {
-            this.collection = new Backbone.Collection;
+            this.collection = new Backbone.Collection();
             this.collection.reset(fakeGoogleJson);
 
             this.pitstopView = new PitstopCollectionView({

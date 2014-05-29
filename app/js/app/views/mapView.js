@@ -1,33 +1,29 @@
-define([
+require([
         "backbone",
-        "hbs!app/templates/map",
-        "app/models/mapModel"
+        "jquery",
+        "underscore",
+        "async!http://maps.google.com/maps/api/js?sensor=false"
+        //"async!http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places"
 ], function(
         Backbone,
-        mapTmpl,
-        MapModel
+        $,
+        _
 ) {
 
     var MapView = Backbone.View.extend({
-        el: "#viewWrapper",
-        template: mapTmpl,
+        _map: null,
 
+        render: function(){
 
-        initialize: function() {
-            console.log('inside of initMap');
-            var options = [{center: new google.maps.LatLng(37.09024, -95.712891), mapTypeId:google.maps.MapTypeId.ROADMAP, zoom: 4 }];
-
-            var myMap = new google.maps.Map($('#map_canvas'), options);
-            console.log("was the map returned?");
-            this.render();
-        },
-        render: function() {
-            console.log("inside of funtion in mapsView");
-
-            this.$el.html(this.template(this.model.toJSON()));
-
-            return this;
+            this.$el.css({width:600, height:400});
+            this.map = new google.maps.Map(this.el,{
+                zoom:16,
+                center: new google.maps.LatLng(43.81451767218152, -91.25057458877563),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+          return this;
         }
     });
     return MapView;
 });
+

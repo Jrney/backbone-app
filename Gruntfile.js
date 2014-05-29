@@ -47,6 +47,8 @@ module.exports = function(grunt) {
                             "backbone/backbone.js",
                             "backbone.localStorage/backbone.localStorage.js",
                             "requirejs-plugins/src/async.js",
+                            "requirejs-plugins/src/propertyParser.js",
+                            "requirejs-plugins/src/goog.js",
                             "isotope/dist/isotope.pkgd.js",
 
                             // Test libraries.
@@ -132,7 +134,9 @@ module.exports = function(grunt) {
                 files: {
                     src: [
                         "app/js/*.js",
-                        "app/js/app/**/*.js",
+                        "app/js/**/*.js",
+                        "!app/js/app/scripts.js",
+                        "!app/js/vendor/**/*.js",
                         "test/*/js/**/*.js"
                     ]
                 }
@@ -184,8 +188,16 @@ module.exports = function(grunt) {
                 files: ["app/css/less/**/*.less"],
                 tasks: ["less"],
                 options: {
-                    spawn: false
+                    spawn: false,
+                    reload: true
                 }
+            },
+            scripts: {
+                files: ["app/js/**/*.js", "!app/js/app/scripts.js"],
+                tasks: ['jshint'],
+                options: {
+                    spawn: false,
+                },
             },
         },
 
