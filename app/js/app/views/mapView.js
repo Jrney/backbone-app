@@ -22,7 +22,7 @@ define([
             this.render();
         },
         render: function() {
-            console.log("inside of the render funtion in mapsView");
+            console.log("inside of funtion in mapsView");
 
             this.$el.html(this.template(this.model.toJSON()));
 
