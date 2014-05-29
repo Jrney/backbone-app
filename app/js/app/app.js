@@ -18,7 +18,6 @@ define([
     //     }
     // });
     $(function() {
-        window.console.log("samwise likes app.js");
         var router = new AppRouter();
         router.start();
     });

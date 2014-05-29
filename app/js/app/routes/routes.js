@@ -221,7 +221,7 @@ define([
         map: function() {
             window.console.log("inside of map routes function");
             var that = this;
-            this.mapView = new MapView({request: that.indexView.request});
+            this.mapView = new MapView({model: that.indexView.request});
 
         },
         pitstops: function() {
