@@ -1,7 +1,7 @@
 define([
-    'jquery',
-    'backbone',
-    'isotope',
+    "jquery",
+    "backbone",
+    "isotope",
     "app/routes/routes"
 ], function(
     $,
@@ -18,7 +18,7 @@ define([
     //     }
     // });
     $(function() {
-        console.log("samwise likes app.js");
+        window.console.log("samwise likes app.js");
         var router = new AppRouter();
         router.start();
     });

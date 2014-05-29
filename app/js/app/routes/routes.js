@@ -217,7 +217,7 @@ define([
             this.indexView = new IndexView({});
             //console.dir(this.indexView);
             this.indexView.initialize();
-            console.log("Pipin is in indexView");
+            window.console.log("Pipin is in indexView");
         },
         map: function() {
             this.mapModel = new MapModel();
@@ -227,7 +227,7 @@ define([
             this.mapView.render();
         },
         pitstops: function() {
-            this.collection = new Backbone.Collection;
+            this.collection = new Backbone.Collection();
             this.collection.reset(fakeGoogleJson);
 
             this.pitstopView = new PitstopCollectionView({

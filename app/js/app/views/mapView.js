@@ -1,9 +1,11 @@
 define([
         "backbone",
+        "jquery",
         "hbs!app/templates/map",
         "app/models/mapModel"
 ], function(
         Backbone,
+        $,
         mapTmpl,
         MapModel
 ) {
@@ -14,15 +16,15 @@ define([
 
 
         initialize: function() {
-            console.log('inside of initMap');
+            window.console.log("inside of initMap");
             var options = [{center: new google.maps.LatLng(37.09024, -95.712891), mapTypeId:google.maps.MapTypeId.ROADMAP, zoom: 4 }];
 
-            var myMap = new google.maps.Map($('#map_canvas'), options);
-            console.log("was the map returned?");
+            var myMap = new google.maps.Map($("#map_canvas"), options);
+            window.console.log("was the map returned?");
             this.render();
         },
         render: function() {
-            console.log("inside of the render funtion in mapsView");
+            window.console.log("inside of the render funtion in mapsView");
 
             this.$el.html(this.template(this.model.toJSON()));
 
