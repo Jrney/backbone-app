@@ -27,11 +27,7 @@ define([
 
             this.$el.html(this.template());
 
-            window.console.log("about to log this.$el :");
-            window.console.dir(this.$el);
             var myMap = new google.maps.Map($("#map_canvas")[0], options);
-
-            window.console.log("why isn't watch running in the Gruntfile?");
 
             return myMap;
 
