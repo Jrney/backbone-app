@@ -13,7 +13,6 @@
             "underscore": "vendor/lodash.underscore",
             "hbs": "vendor/hbs/hbs",
             "async": "vendor/async",
-            "google": "google",
             "isotope": "vendor/isotope.pkgd",
             "backbone": "vendor/backbone",
 
@@ -21,9 +20,8 @@
             "client": "app/app",
             "scripts": "app/scripts",
             "maps": "app/customMaps",
-            "pitstopView": "app/views/pitstopView"
-
-
+            "pitstopView": "app/views/pitstopView",
+            "pitstopModel": "app/models/pitstopModel"
         }
     });
     require(['scripts'], function(){});

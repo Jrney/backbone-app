@@ -24667,6 +24667,7 @@ define('app/models/pitstopModel',["backbone"], function(Backbone) {
     });
     return PitstopModel;
 });
+
 define('app/collections/pitstopCollection',[
         "backbone",
         "app/models/pitstopModel"
@@ -25073,8 +25074,8 @@ define('client',[
             "client": "app/app",
             "scripts": "app/scripts",
             "maps": "app/customMaps",
-            "pitstopView": "app/views/pitstopView"
-
+            "pitstopView": "app/views/pitstopView",
+            "pitstopModel": "app/models/pitstopModel"
 
         }
     });
@@ -25082,5 +25083,6 @@ define('client',[
     require(['client'], function(){});
     //require(['maps'], function(){});
 }());
+
 define("config", function(){});
 
