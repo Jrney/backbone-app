@@ -1,15 +1,15 @@
 define([
-        "backbone",
-        "jquery",
-        "hbs!app/templates/map",
-        "app/models/requestModel"
-        //"app/models/mapModel"
+    "backbone",
+    "jquery",
+    "hbs!app/templates/map",
+    "app/models/requestModel"
+    //"app/models/mapModel"
 ], function(
-        Backbone,
-        $,
-        mapTmpl,
-        RequestModel
-        //MapModel
+    Backbone,
+    $,
+    mapTmpl,
+    RequestModel
+    //MapModel
 ) {
 
     var MapView = Backbone.View.extend({
@@ -17,7 +17,8 @@ define([
         template: mapTmpl,
 
         initialize: function() {
-
+            window.console.log('logging this.model from initialize:')
+            window.console.dir(this.model);
             this.$el.html(this.template());
             //this.model = this.model || new RequestModel();
             this.model.on("change", this.render, this);
@@ -43,23 +44,23 @@ define([
             // });
             this.render();
             return this;
-        },// end initialize
+        }, // end initialize
 
         events: {
-            "click #embarkDirection" : "getNewRoute"
-        },// end events
+            "click #embarkDirection": "getNewRoute"
+        }, // end events
 
         getNewRoute: function() {
             window.console.log("I've been fired by the click function");
-            this.model.set ({
-                origin : $("#startInput").val(),
-                destination : $("#endInput").val()
+            this.model.set({
+                origin: $("#startInput").val(),
+                destination: $("#endInput").val()
             });
 
             //this.model.set("destination", $("#endInput").val());
 
             return this;
-        },// end getNewRoute
+        }, // end getNewRoute
 
         route: function(myMap) {
             var directionService = new google.maps.DirectionsService();
@@ -99,20 +100,19 @@ define([
                 }
             });
             //return boxes;
-        },// end route
+        }, // end route
         render: function() {
             //this.remove();
-            var options =
-                {
-                    center: new google.maps.LatLng(47.620467 , -122.349116),
-                    mapTypeId:google.maps.MapTypeId.ROADMAP,
-                    zoom: 16
-                };
+            var options = {
+                center: new google.maps.LatLng(47.620467, -122.349116),
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                zoom: 16
+            };
 
             var myMap = new google.maps.Map($("#map_canvas")[0], options);
-
-            //window.console.log(this.model.origin);
-            if(this.model.origin && this.model.destination) {
+            window.console.log('logging this.model.get(\'origin\') from render fn:');
+            window.console.log(this.model.get('origin'));
+            if (this.model.get('origin') && this.model.get('destination')) {
                 this.route(myMap);
             }
 

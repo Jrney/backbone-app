@@ -24652,7 +24652,7 @@ helpers = this.merge(helpers, Handlebars.helpers);
   
 
 
-  return "<div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">\n    <div class=\"container\">\n        <div class=\"navbar-header\">\n            <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">\n                <span class=\"sr-only\">Toggle navigation</span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n            </button>\n            <a class=\"navbar-brand\" href=\"#\">Jrney</a>\n        </div>\n        <div class=\"collapse navbar-collapse\">\n            <form class=\"form-inline navForm\" role=\"form\">\n                <div class=\"form-group\">\n                    <label for=\"startingSelect\" class=\"\">Origin</label>\n                        <select name=\"startingSelect\" class=\"form-control\">\n                            <option value=\"Seattle\">Seattle</option>\n                            <option value=\"Portland\">Portland</option>\n                            <option value=\"Yakima\">Yakima</option>\n                            <option value=\"MtVernon\">Mt. Vernon</option>\n                        </select>\n                </div>\n                <div class=\"form-group\">\n                    <label for=\"endingSelect\" class=\"\">Finish</label>\n                        <select name=\"endingSelect\" class=\"form-control\">\n                            <option value=\"Seattle\">Seattle</option>\n                            <option value=\"Portland\">Portland</option>\n                            <option value=\"Yakima\">Yakima</option>\n                            <option value=\"MtVernon\">Mt. Vernon</option>\n                        </select>\n                </div>\n                <a href=\"/map.html\" class=\"btn btn-primary\">Embark</a>\n            </form>\n<!-- end .navForm -->\n        </div><!--/.nav-collapse -->\n    </div>\n</div>\n<!-- end .navbar -->\n<div id=\"container\" class=\"container group\">\n    <h2>Pitstops</h2>\n    <div id=\"pitstopsContainer\" class=\"container\">\n\n    </div>\n</div>\n<!-- end #conttainer -->\n<footer class=\"container\">\n    <small>All Rights Reserved &copy; 2014</small>\n</footer>";
+  return "<div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">\n    <div class=\"container\">\n        <div class=\"navbar-header\">\n            <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">\n                <span class=\"sr-only\">Toggle navigation</span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n            </button>\n            <a class=\"navbar-brand\" href=\"#\">Jrney</a>\n        </div>\n        <div class=\"collapse navbar-collapse\">\n            <form class=\"form-inline navForm\" role=\"form\">\n                <div class=\"form-group\">\n                    <label for=\"startingSelect\" class=\"\">Origin</label>\n                        <select name=\"startingSelect\" class=\"form-control\">\n                            <option value=\"Seattle\">Seattle</option>\n                            <option value=\"Portland\">Portland</option>\n                            <option value=\"Yakima\">Yakima</option>\n                            <option value=\"MtVernon\">Mt. Vernon</option>\n                        </select>\n                </div>\n                <div class=\"form-group\">\n                    <label for=\"endingSelect\" class=\"\">Finish</label>\n                        <select name=\"endingSelect\" class=\"form-control\">\n                            <option value=\"Seattle\">Seattle</option>\n                            <option value=\"Portland\">Portland</option>\n                            <option value=\"Yakima\">Yakima</option>\n                            <option value=\"MtVernon\">Mt. Vernon</option>\n                        </select>\n                </div>\n                <a href=\"/map.html\" class=\"btn btn-primary\">Embark</a>\n            </form>\n<!-- end .navForm -->\n        </div><!--/.nav-collapse -->\n    </div>\n</div>\n<!-- end .navbar -->\n<div id=\"container\" class=\"container group\">\n    <h2>Pitstops</h2>\n    <div id=\"pitstopsContainer\" class=\"container\">\n\n    </div>\n</div>\n<!-- end #conttainer -->\n<footer class=\"container\">\n    <small>All Rights Reserved &copy; 2014</small>\n</footer>\n";
   });
 return t;
 });
@@ -24821,16 +24821,59 @@ define('app/views/indexView',[
     });
     return IndexView;
 });
-define('app/models/mapModel',["backbone"], function(Backbone) {
-    var MapModel = Backbone.Model.extend({
-        default: {
-            center: new google.maps.LatLng(37.09024, -95.712891),
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            zoom: 4
+/** @license
+ * RequireJS plugin for async dependency load like JSONP and Google Maps
+ * Author: Miller Medeiros
+ * Version: 0.1.1 (2011/11/17)
+ * Released under the MIT license
+ */
+define('async',[],function(){
+
+    var DEFAULT_PARAM_NAME = 'callback',
+        _uid = 0;
+
+    function injectScript(src){
+        var s, t;
+        s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = src;
+        t = document.getElementsByTagName('script')[0]; t.parentNode.insertBefore(s,t);
+    }
+
+    function formatUrl(name, id){
+        var paramRegex = /!(.+)/,
+            url = name.replace(paramRegex, ''),
+            param = (paramRegex.test(name))? name.replace(/.+!/, '') : DEFAULT_PARAM_NAME;
+        url += (url.indexOf('?') < 0)? '?' : '&';
+        return url + param +'='+ id;
+    }
+
+    function uid() {
+        _uid += 1;
+        return '__async_req_'+ _uid +'__';
+    }
+
+    return{
+        load : function(name, req, onLoad, config){
+            if(config.isBuild){
+                onLoad(null); //avoid errors on the optimizer
+            }else{
+                var id = uid();
+                //create a global variable that stores onLoad so callback
+                //function can define new module after async load
+                window[id] = onLoad;
+                injectScript(formatUrl(name, id));
+            }
         }
+    };
+});
+
+
+define('app/models/mapModel',['backbone', 'async!http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places'], function(Backbone) {
+    var MapModel = Backbone.Model.extend({
+        defaults: {}
     });
     return MapModel;
 });
+
 
 /* START_TEMPLATE */
 define('hbs!app/templates/map',['hbs','hbs/handlebars'], function( hbs, Handlebars ){ 
@@ -24847,17 +24890,17 @@ return t;
 /* END_TEMPLATE */
 ;
 define('app/views/mapView',[
-        "backbone",
-        "jquery",
-        "hbs!app/templates/map",
-        "app/models/requestModel"
-        //"app/models/mapModel"
+    "backbone",
+    "jquery",
+    "hbs!app/templates/map",
+    "app/models/requestModel"
+    //"app/models/mapModel"
 ], function(
-        Backbone,
-        $,
-        mapTmpl,
-        RequestModel
-        //MapModel
+    Backbone,
+    $,
+    mapTmpl,
+    RequestModel
+    //MapModel
 ) {
 
     var MapView = Backbone.View.extend({
@@ -24865,7 +24908,8 @@ define('app/views/mapView',[
         template: mapTmpl,
 
         initialize: function() {
-
+            window.console.log('logging this.model from initialize:')
+            window.console.dir(this.model);
             this.$el.html(this.template());
             //this.model = this.model || new RequestModel();
             this.model.on("change", this.render, this);
@@ -24891,23 +24935,23 @@ define('app/views/mapView',[
             // });
             this.render();
             return this;
-        },// end initialize
+        }, // end initialize
 
         events: {
-            "click #embarkDirection" : "getNewRoute"
-        },// end events
+            "click #embarkDirection": "getNewRoute"
+        }, // end events
 
         getNewRoute: function() {
             window.console.log("I've been fired by the click function");
-            this.model.set ({
-                origin : $("#startInput").val(),
-                destination : $("#endInput").val()
+            this.model.set({
+                origin: $("#startInput").val(),
+                destination: $("#endInput").val()
             });
 
             //this.model.set("destination", $("#endInput").val());
 
             return this;
-        },// end getNewRoute
+        }, // end getNewRoute
 
         route: function(myMap) {
             var directionService = new google.maps.DirectionsService();
@@ -24947,20 +24991,19 @@ define('app/views/mapView',[
                 }
             });
             //return boxes;
-        },// end route
+        }, // end route
         render: function() {
             //this.remove();
-            var options =
-                {
-                    center: new google.maps.LatLng(47.620467 , -122.349116),
-                    mapTypeId:google.maps.MapTypeId.ROADMAP,
-                    zoom: 16
-                };
+            var options = {
+                center: new google.maps.LatLng(47.620467, -122.349116),
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                zoom: 16
+            };
 
             var myMap = new google.maps.Map($("#map_canvas")[0], options);
-
-            //window.console.log(this.model.origin);
-            if(this.model.origin && this.model.destination) {
+            window.console.log('logging this.model.get(\'origin\') from render fn:');
+            window.console.log(this.model.get('origin'));
+            if (this.model.get('origin') && this.model.get('destination')) {
                 this.route(myMap);
             }
 
@@ -24969,6 +25012,7 @@ define('app/views/mapView',[
     });
     return MapView;
 });
+
 define('app/routes/routes',[
     "backbone",
     "../collections/pitstopCollection",
@@ -24989,196 +25033,183 @@ define('app/routes/routes',[
     RequestModel
 ) {
     var fakeGoogleJson =
-        [
-            {
-                "formatted_address" : "529 Kent Street, Sydney NSW, Australia",
-                "geometry" : {
-                    "location" : {
-                        "lat" : -33.8750460,
-                        "lng" : 151.2052720
-                    }
-                },
-                "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
-                "id" : "827f1ac561d72ec25897df088199315f7cbbc8ed",
-                "name" : "Tetsuya's",
-                "rating" : 4.30,
-                "reference" : "CnRmAAAAmmm3dlSVT3E7rIvwQ0lHBA4sayvxWEc4nZaXSSjRtfKRGoYnfr3d5AvQGk4e0u3oOErXsIJwtd3Wck1Onyw6pCzr8swW4E7dZ6wP4dV6AsXPvodwdVyqHgyGE_K8DqSp5McW_nFcci_-1jXb5Phv-RIQTzv5BjIGS0ufgTslfC6dqBoU7tw8NKUDHg28bPJlL0vGVWVgbTg",
-                "types" : [
-                    "restaurant",
-                    "food",
-                    "establishment"
-                ]
-            },
-            {
-                "formatted_address" : "Upper Level, Overseas Passenger Terminal/5 Hickson Road, The Rocks NSW, Australia",
-                "geometry" : {
-                    "location" : {
-                        "lat" : -33.8583790,
-                        "lng" : 151.2100270
-                    }
-                },
-                "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/cafe-71.png",
-                "id" : "f181b872b9bc680c8966df3e5770ae9839115440",
-                "name" : "Quay",
-                "rating" : 4.10,
-                "reference" : "CnRiAAAADmPDOkn3znv_fX78Ma6X5_t7caEGNdSWnpwMIdDNZkLpVKPnQJXP1ghlySO-ixqs28UtDmJaOlCHn18pxpj7UQjRzR4Kmye6Gijoqoox9bpkaCAJatbJGZEIIUwRbTNIE_L2jGo5BDqiosqU2F5QdBIQbXKrvfQuo6rmu8285j7bDBoUrGrN4r6XQ-PVm260PFt5kwc3EfY",
-                "types" : [
-                    "cafe",
-                    "bar",
-                    "restaurant",
-                    "food",
-                    "establishment"
-                ]
-            },
-            {
-                "formatted_address" : "107 George Street, The Rocks NSW, Australia",
-                "geometry" : {
-                    "location" : {
-                        "lat" : -33.8597750,
-                        "lng" : 151.2085920
-                    }
-                },
-                "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
-                "id" : "7beacea28938ae42bcac04faf79a607bf84409e6",
-                "name" : "Rockpool",
-                "rating" : 4.0,
-                "reference" : "CnRlAAAAVK4Ek78r9yHV56I-zbaTxo9YiroCbTlel-ZRj2i6yGAkLwNMm_flMhCl3j8ZHN-jJyG1TvKqBBnKQS2z4Tceu-1kZupZ1HSo5JWRBKd7qt2vKgT8VauiEBQL-zJiKVzSy5rFfilKDLSiLusmdi88ThIQqqj6hKHn5awdj6C4f59ifRoUg67KlbpuGuuW7S1tAH_EyBl6KE4",
-                "types" : [
-                    "restaurant",
-                    "food",
-                    "establishment"
-                ]
-            },
-            {
-                "formatted_address" : "483 George Street, Sydney NSW, Australia",
-                "events" : [
-                    {
-                        "event_id" : "7lH_gK1GphU",
-                        "summary" : "Google Maps Developer Meetup: Rockin' out with the Places API",
-                        "url" : "https://developers.google.com/places"
-                    }
-                ],
-                "geometry" : {
-                    "location" : {
-                        "lat" : -33.8731950,
-                        "lng" : 151.2063380
-                    }
-                },
-                "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/civic_building-71.png",
-                "id" : "017049cb4e82412aaf0efbde890e82b7f2987c16",
-                "name" : "Chinatown Sydney",
-                "rating" : 4.0,
-                "reference" : "CnRuAAAAsLNeRQtKD7TEUXWG6gYD7ByOVKjQE61GSyeGZrX-pOPVps2BaLBlH0zBHlrVU9DKhsuXra075loWmZUCbczKDPdCaP9FVJXB2NsZ1q7188pqRFik58S9Z1lcWjyVoVqvdUUt9bDMLqxVT4ENmolbgBIQ9Wy0sgDy0BgWyg5kfPMHCxoUOvmhfKC-lTefXGgnsRqEQwn8M0I",
-                "types" : [
-                    "city_hall",
-                    "park",
-                    "restaurant",
-                    "doctor",
-                    "train_station",
-                    "local_government_office",
-                    "food",
-                    "health",
-                    "establishment"
-                ]
-            },
-            {
-                "formatted_address" : "529 Kent Street, Sydney NSW, Australia",
-                "geometry" : {
-                    "location" : {
-                        "lat" : -33.8750460,
-                        "lng" : 151.2052720
-                    }
-                },
-                "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
-                "id" : "827f1ac561d72ec25897df088199315f7cbbc8ed",
-                "name" : "Tetsuya's",
-                "rating" : 4.30,
-                "reference" : "CnRmAAAAmmm3dlSVT3E7rIvwQ0lHBA4sayvxWEc4nZaXSSjRtfKRGoYnfr3d5AvQGk4e0u3oOErXsIJwtd3Wck1Onyw6pCzr8swW4E7dZ6wP4dV6AsXPvodwdVyqHgyGE_K8DqSp5McW_nFcci_-1jXb5Phv-RIQTzv5BjIGS0ufgTslfC6dqBoU7tw8NKUDHg28bPJlL0vGVWVgbTg",
-                "types" : [
-                    "restaurant",
-                    "food",
-                    "establishment"
-                ]
-            },
-            {
-                "formatted_address" : "Upper Level, Overseas Passenger Terminal/5 Hickson Road, The Rocks NSW, Australia",
-                "geometry" : {
-                    "location" : {
-                        "lat" : -33.8583790,
-                        "lng" : 151.2100270
-                    }
-                },
-                "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/cafe-71.png",
-                "id" : "f181b872b9bc680c8966df3e5770ae9839115440",
-                "name" : "Quay",
-                "rating" : 4.10,
-                "reference" : "CnRiAAAADmPDOkn3znv_fX78Ma6X5_t7caEGNdSWnpwMIdDNZkLpVKPnQJXP1ghlySO-ixqs28UtDmJaOlCHn18pxpj7UQjRzR4Kmye6Gijoqoox9bpkaCAJatbJGZEIIUwRbTNIE_L2jGo5BDqiosqU2F5QdBIQbXKrvfQuo6rmu8285j7bDBoUrGrN4r6XQ-PVm260PFt5kwc3EfY",
-                "types" : [
-                    "cafe",
-                    "bar",
-                    "restaurant",
-                    "food",
-                    "establishment"
-                ]
-            },
-            {
-                "formatted_address" : "107 George Street, The Rocks NSW, Australia",
-                "geometry" : {
-                    "location" : {
-                        "lat" : -33.8597750,
-                        "lng" : 151.2085920
-                    }
-                },
-                "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
-                "id" : "7beacea28938ae42bcac04faf79a607bf84409e6",
-                "name" : "Rockpool",
-                "rating" : 4.0,
-                "reference" : "CnRlAAAAVK4Ek78r9yHV56I-zbaTxo9YiroCbTlel-ZRj2i6yGAkLwNMm_flMhCl3j8ZHN-jJyG1TvKqBBnKQS2z4Tceu-1kZupZ1HSo5JWRBKd7qt2vKgT8VauiEBQL-zJiKVzSy5rFfilKDLSiLusmdi88ThIQqqj6hKHn5awdj6C4f59ifRoUg67KlbpuGuuW7S1tAH_EyBl6KE4",
-                "types" : [
-                    "restaurant",
-                    "food",
-                    "establishment"
-                ]
-            },
-            {
-                "formatted_address" : "483 George Street, Sydney NSW, Australia",
-                "events" : [
-                    {
-                    "event_id" : "7lH_gK1GphU",
-                    "summary" : "Google Maps Developer Meetup: Rockin' out with the Places API",
-                    "url" : "https://developers.google.com/places"
-                    }
-                ],
-                "geometry" : {
-                    "location" : {
-                        "lat" : -33.8731950,
-                        "lng" : 151.2063380
-                    }
-                },
-                "icon" : "http://maps.gstatic.com/mapfiles/place_api/icons/civic_building-71.png",
-                "id" : "017049cb4e82412aaf0efbde890e82b7f2987c19",
-                "name" : "Jim's Roadside BBQ Sydney",
-                "rating" : 4.0,
-                "reference" : "CnRuAAAAsLNeRQtKD7TEUXWG6gYD7ByOVKjQE61GSyeGZrX-pOPVps2BaLBlH0zBHlrVU9DKhsuXra075loWmZUCbczKDPdCaP9FVJXB2NsZ1q7188pqRFik58S9Z1lcWjyVoVqvdUUt9bDMLqxVT4ENmolbgBIQ9Wy0sgDy0BgWyg5kfPMHCxoUOvmhfKC-lTefXGgnsRqEQwn8M0I",
-                "types" : [
-                    "city_hall",
-                    "park",
-                    "restaurant",
-                    "doctor",
-                    "train_station",
-                    "local_government_office",
-                    "food",
-                    "health",
-                    "establishment"
-                ]
+        [{
+        "formatted_address": "529 Kent Street, Sydney NSW, Australia",
+        "geometry": {
+            "location": {
+                "lat": -33.8750460,
+                "lng": 151.2052720
             }
-       ];
+        },
+        "icon": "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+        "id": "827f1ac561d72ec25897df088199315f7cbbc8ed",
+        "name": "Tetsuya's",
+        "rating": 4.30,
+        "reference": "CnRmAAAAmmm3dlSVT3E7rIvwQ0lHBA4sayvxWEc4nZaXSSjRtfKRGoYnfr3d5AvQGk4e0u3oOErXsIJwtd3Wck1Onyw6pCzr8swW4E7dZ6wP4dV6AsXPvodwdVyqHgyGE_K8DqSp5McW_nFcci_-1jXb5Phv-RIQTzv5BjIGS0ufgTslfC6dqBoU7tw8NKUDHg28bPJlL0vGVWVgbTg",
+        "types": [
+            "restaurant",
+            "food",
+            "establishment"
+        ]
+    }, {
+        "formatted_address": "Upper Level, Overseas Passenger Terminal/5 Hickson Road, The Rocks NSW, Australia",
+        "geometry": {
+            "location": {
+                "lat": -33.8583790,
+                "lng": 151.2100270
+            }
+        },
+        "icon": "http://maps.gstatic.com/mapfiles/place_api/icons/cafe-71.png",
+        "id": "f181b872b9bc680c8966df3e5770ae9839115440",
+        "name": "Quay",
+        "rating": 4.10,
+        "reference": "CnRiAAAADmPDOkn3znv_fX78Ma6X5_t7caEGNdSWnpwMIdDNZkLpVKPnQJXP1ghlySO-ixqs28UtDmJaOlCHn18pxpj7UQjRzR4Kmye6Gijoqoox9bpkaCAJatbJGZEIIUwRbTNIE_L2jGo5BDqiosqU2F5QdBIQbXKrvfQuo6rmu8285j7bDBoUrGrN4r6XQ-PVm260PFt5kwc3EfY",
+        "types": [
+            "cafe",
+            "bar",
+            "restaurant",
+            "food",
+            "establishment"
+        ]
+    }, {
+        "formatted_address": "107 George Street, The Rocks NSW, Australia",
+        "geometry": {
+            "location": {
+                "lat": -33.8597750,
+                "lng": 151.2085920
+            }
+        },
+        "icon": "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+        "id": "7beacea28938ae42bcac04faf79a607bf84409e6",
+        "name": "Rockpool",
+        "rating": 4.0,
+        "reference": "CnRlAAAAVK4Ek78r9yHV56I-zbaTxo9YiroCbTlel-ZRj2i6yGAkLwNMm_flMhCl3j8ZHN-jJyG1TvKqBBnKQS2z4Tceu-1kZupZ1HSo5JWRBKd7qt2vKgT8VauiEBQL-zJiKVzSy5rFfilKDLSiLusmdi88ThIQqqj6hKHn5awdj6C4f59ifRoUg67KlbpuGuuW7S1tAH_EyBl6KE4",
+        "types": [
+            "restaurant",
+            "food",
+            "establishment"
+        ]
+    }, {
+        "formatted_address": "483 George Street, Sydney NSW, Australia",
+        "events": [{
+            "event_id": "7lH_gK1GphU",
+            "summary": "Google Maps Developer Meetup: Rockin' out with the Places API",
+            "url": "https://developers.google.com/places"
+        }],
+        "geometry": {
+            "location": {
+                "lat": -33.8731950,
+                "lng": 151.2063380
+            }
+        },
+        "icon": "http://maps.gstatic.com/mapfiles/place_api/icons/civic_building-71.png",
+        "id": "017049cb4e82412aaf0efbde890e82b7f2987c16",
+        "name": "Chinatown Sydney",
+        "rating": 4.0,
+        "reference": "CnRuAAAAsLNeRQtKD7TEUXWG6gYD7ByOVKjQE61GSyeGZrX-pOPVps2BaLBlH0zBHlrVU9DKhsuXra075loWmZUCbczKDPdCaP9FVJXB2NsZ1q7188pqRFik58S9Z1lcWjyVoVqvdUUt9bDMLqxVT4ENmolbgBIQ9Wy0sgDy0BgWyg5kfPMHCxoUOvmhfKC-lTefXGgnsRqEQwn8M0I",
+        "types": [
+            "city_hall",
+            "park",
+            "restaurant",
+            "doctor",
+            "train_station",
+            "local_government_office",
+            "food",
+            "health",
+            "establishment"
+        ]
+    }, {
+        "formatted_address": "529 Kent Street, Sydney NSW, Australia",
+        "geometry": {
+            "location": {
+                "lat": -33.8750460,
+                "lng": 151.2052720
+            }
+        },
+        "icon": "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+        "id": "827f1ac561d72ec25897df088199315f7cbbc8ed",
+        "name": "Tetsuya's",
+        "rating": 4.30,
+        "reference": "CnRmAAAAmmm3dlSVT3E7rIvwQ0lHBA4sayvxWEc4nZaXSSjRtfKRGoYnfr3d5AvQGk4e0u3oOErXsIJwtd3Wck1Onyw6pCzr8swW4E7dZ6wP4dV6AsXPvodwdVyqHgyGE_K8DqSp5McW_nFcci_-1jXb5Phv-RIQTzv5BjIGS0ufgTslfC6dqBoU7tw8NKUDHg28bPJlL0vGVWVgbTg",
+        "types": [
+            "restaurant",
+            "food",
+            "establishment"
+        ]
+    }, {
+        "formatted_address": "Upper Level, Overseas Passenger Terminal/5 Hickson Road, The Rocks NSW, Australia",
+        "geometry": {
+            "location": {
+                "lat": -33.8583790,
+                "lng": 151.2100270
+            }
+        },
+        "icon": "http://maps.gstatic.com/mapfiles/place_api/icons/cafe-71.png",
+        "id": "f181b872b9bc680c8966df3e5770ae9839115440",
+        "name": "Quay",
+        "rating": 4.10,
+        "reference": "CnRiAAAADmPDOkn3znv_fX78Ma6X5_t7caEGNdSWnpwMIdDNZkLpVKPnQJXP1ghlySO-ixqs28UtDmJaOlCHn18pxpj7UQjRzR4Kmye6Gijoqoox9bpkaCAJatbJGZEIIUwRbTNIE_L2jGo5BDqiosqU2F5QdBIQbXKrvfQuo6rmu8285j7bDBoUrGrN4r6XQ-PVm260PFt5kwc3EfY",
+        "types": [
+            "cafe",
+            "bar",
+            "restaurant",
+            "food",
+            "establishment"
+        ]
+    }, {
+        "formatted_address": "107 George Street, The Rocks NSW, Australia",
+        "geometry": {
+            "location": {
+                "lat": -33.8597750,
+                "lng": 151.2085920
+            }
+        },
+        "icon": "http://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+        "id": "7beacea28938ae42bcac04faf79a607bf84409e6",
+        "name": "Rockpool",
+        "rating": 4.0,
+        "reference": "CnRlAAAAVK4Ek78r9yHV56I-zbaTxo9YiroCbTlel-ZRj2i6yGAkLwNMm_flMhCl3j8ZHN-jJyG1TvKqBBnKQS2z4Tceu-1kZupZ1HSo5JWRBKd7qt2vKgT8VauiEBQL-zJiKVzSy5rFfilKDLSiLusmdi88ThIQqqj6hKHn5awdj6C4f59ifRoUg67KlbpuGuuW7S1tAH_EyBl6KE4",
+        "types": [
+            "restaurant",
+            "food",
+            "establishment"
+        ]
+    }, {
+        "formatted_address": "483 George Street, Sydney NSW, Australia",
+        "events": [{
+            "event_id": "7lH_gK1GphU",
+            "summary": "Google Maps Developer Meetup: Rockin' out with the Places API",
+            "url": "https://developers.google.com/places"
+        }],
+        "geometry": {
+            "location": {
+                "lat": -33.8731950,
+                "lng": 151.2063380
+            }
+        },
+        "icon": "http://maps.gstatic.com/mapfiles/place_api/icons/civic_building-71.png",
+        "id": "017049cb4e82412aaf0efbde890e82b7f2987c19",
+        "name": "Jim's Roadside BBQ Sydney",
+        "rating": 4.0,
+        "reference": "CnRuAAAAsLNeRQtKD7TEUXWG6gYD7ByOVKjQE61GSyeGZrX-pOPVps2BaLBlH0zBHlrVU9DKhsuXra075loWmZUCbczKDPdCaP9FVJXB2NsZ1q7188pqRFik58S9Z1lcWjyVoVqvdUUt9bDMLqxVT4ENmolbgBIQ9Wy0sgDy0BgWyg5kfPMHCxoUOvmhfKC-lTefXGgnsRqEQwn8M0I",
+        "types": [
+            "city_hall",
+            "park",
+            "restaurant",
+            "doctor",
+            "train_station",
+            "local_government_office",
+            "food",
+            "health",
+            "establishment"
+        ]
+    }];
 
     var AppRouter = Backbone.Router.extend({
         routes: {
-            "" : "index",
-            "map" : "map",
-            "pitstops"  : "pitstops"
+            "": "index",
+            "map": "map",
+            "pitstops": "pitstops"
         },
         start: function() {
             Backbone.history.start();
@@ -25187,18 +25218,23 @@ define('app/routes/routes',[
 
         },
         index: function() {
-            this.indexView = new IndexView({model: new RequestModel()});
+            this.indexView = new IndexView({
+                model: new RequestModel()
+            });
         },
         map: function() {
             var request;
+
             window.console.dir(this.indexView);
-            if(this.indexView) {
-                request = this.indexView.model;
+            if (this.indexView) {
+                request = this.indexView.model.toJSON();
             } else {
-                request = new RequestModel();
+                request = {};
             }
             window.console.dir(request);
-            this.mapView = new MapView({model: request});
+            this.mapView = new MapView({
+                model: new RequestModel(request)
+            });
         },
         pitstops: function() {
             this.collection = new Backbone.Collection();
@@ -25212,6 +25248,7 @@ define('app/routes/routes',[
     return AppRouter;
 
 });
+
 define('client',[
     "jquery",
     "backbone",
