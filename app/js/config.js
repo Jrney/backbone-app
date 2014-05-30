@@ -19,7 +19,7 @@
             "backbone": "vendor/backbone",
             "bootstrap": "vendor/bootstrap/js/bootstrap",
             "gmaps": "http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places",
-
+            "routeBoxer": "vendor/RouteBoxer",
             // application libraries
             "client": "app/app",
             "scripts": "app/scripts",

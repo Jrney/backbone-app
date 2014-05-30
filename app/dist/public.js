@@ -24821,53 +24821,7 @@ define('app/views/indexView',[
     });
     return IndexView;
 });
-/** @license
- * RequireJS plugin for async dependency load like JSONP and Google Maps
- * Author: Miller Medeiros
- * Version: 0.1.1 (2011/11/17)
- * Released under the MIT license
- */
-define('async',[],function(){
-
-    var DEFAULT_PARAM_NAME = 'callback',
-        _uid = 0;
-
-    function injectScript(src){
-        var s, t;
-        s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = src;
-        t = document.getElementsByTagName('script')[0]; t.parentNode.insertBefore(s,t);
-    }
-
-    function formatUrl(name, id){
-        var paramRegex = /!(.+)/,
-            url = name.replace(paramRegex, ''),
-            param = (paramRegex.test(name))? name.replace(/.+!/, '') : DEFAULT_PARAM_NAME;
-        url += (url.indexOf('?') < 0)? '?' : '&';
-        return url + param +'='+ id;
-    }
-
-    function uid() {
-        _uid += 1;
-        return '__async_req_'+ _uid +'__';
-    }
-
-    return{
-        load : function(name, req, onLoad, config){
-            if(config.isBuild){
-                onLoad(null); //avoid errors on the optimizer
-            }else{
-                var id = uid();
-                //create a global variable that stores onLoad so callback
-                //function can define new module after async load
-                window[id] = onLoad;
-                injectScript(formatUrl(name, id));
-            }
-        }
-    };
-});
-
-
-define('app/models/mapModel',['backbone', 'async!http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places'], function(Backbone) {
+define('app/models/mapModel',['backbone'], function(Backbone) {
     var MapModel = Backbone.Model.extend({
         defaults: {}
     });
@@ -24894,12 +24848,14 @@ define('app/views/mapView',[
     "jquery",
     "hbs!app/templates/map",
     "app/models/requestModel"
+    // "routeBoxer"
     //"app/models/mapModel"
 ], function(
     Backbone,
     $,
     mapTmpl,
     RequestModel
+    // RouteBoxer
     //MapModel
 ) {
 
@@ -24908,31 +24864,10 @@ define('app/views/mapView',[
         template: mapTmpl,
 
         initialize: function() {
-            window.console.log('logging this.model from initialize:')
-            window.console.dir(this.model);
+            // var test = new RouteBoxer();
             this.$el.html(this.template());
             //this.model = this.model || new RequestModel();
             this.model.on("change", this.render, this);
-            //this.model = new RequestModel({});
-            // set a listener to the model
-            // this.model.on('change', this.render);
-            // in render clear this.$el or clear the map.
-
-            //var that = this;
-            // specify the element for the target of the click event.
-            // events: {
-            //   "click": "getNewRoute"},
-            //  getNewRoute: fucntion() {
-            //      this.model.origin.......
-            //  }
-            // $("#embarkDirection").on("click", function(e) {
-            //     e.preventDefault();
-
-            //     that.model.origin = $("#startInput").val();
-            //     that.model.destination = $("#endInput").val();
-
-            //     window.console.log(that.request);
-            // });
             this.render();
             return this;
         }, // end initialize
@@ -24945,7 +24880,8 @@ define('app/views/mapView',[
             window.console.log("I've been fired by the click function");
             this.model.set({
                 origin: $("#startInput").val(),
-                destination: $("#endInput").val()
+                destination: $("#endInput").val(),
+                distance: 16
             });
 
             //this.model.set("destination", $("#endInput").val());
@@ -24954,44 +24890,66 @@ define('app/views/mapView',[
         }, // end getNewRoute
 
         route: function(myMap) {
+            var that = this;
             var directionService = new google.maps.DirectionsService();
             var directionsRenderer = new google.maps.DirectionsRenderer({
                 map: myMap
             });
-            //var routeBoxer = new RouteBoxer();
-            // Clear any previous route boxes from the map
-            //need clear boxes function as dependency
-            //clearBoxes();
 
-            // Convert the distance to box around the route from miles to km
-            // var distance = parseFloat(document.getElementById("distance").value) * 1.609344;
-            // var that = this;
-            // var directions = {
-            //     origin: that.model.origin,
-            //     destination: that.model.destination,
-            //     travelMode: google.maps.DirectionsTravelMode.DRIVING
-            // });
-            // window.console.dir();
-            // window.console.dir(that.model.toJSON());
-
-            // Make the directions request
+            console.log(this.model.toJSON());
             directionService.route(this.model.toJSON(), function(result, status) {
+
                 if (status == google.maps.DirectionsStatus.OK) {
                     directionsRenderer.setDirections(result);
-                    //This is the blue line (path) of the route
+
                     var path = result.routes[0].overview_path;
+                    console.log(path);
 
-                    // Box around the overview path(declared above) of the first route
-                    //var boxes = routeBoxer.box(path, distance);
-
-
-                    // Call function elsewhere drawBoxes(boxes);
-                } else {
-                    alert("Directions query failed: " + status);
+                    var boxes = that.boxRoute(path);
+                    //console.log(boxes);
+                    var boxpolys = new Array(boxes.length);
+                    console.log("about to drop boxes");
+                    that.drawBoxes(myMap, boxes, boxpolys);
                 }
             });
-            //return boxes;
+
+
         }, // end route
+
+        boxRoute: function(path) {
+            console.log("i'm in box route");
+            var routeBoxer = new RouteBoxer();
+
+            var boxes = routeBoxer.box(path, 10);
+
+            console.log(boxes);
+            return boxes;
+
+        }, // end box route
+        drawBoxes: function(myMap, boxes, boxpolys) {
+            console.log('In the drawBoxes function');
+            for (var i = 0; i < boxes.length; i++) {
+                boxpolys[i] = new google.maps.Rectangle({
+                    bounds: boxes[i],
+                    fillOpacity: 0,
+                    strokeOpacity: 1.0,
+                    strokeColor: '#000000',
+                    strokeWeight: 1,
+                    // give an id to your boxpolys
+                    id: i,
+                    map: myMap
+                });
+            }
+
+        },
+        /*        clearBoxes: function(boxpolys) {
+            if (boxpolys != null) {
+                for (var i = 0; i < boxpolys.length; i++) {
+                    boxpolys[i].setMap(null);
+                }
+            }
+            boxpolys = null;
+        },*/
         render: function() {
             //this.remove();
             var options = {
@@ -25001,8 +24959,6 @@ define('app/views/mapView',[
             };
 
             var myMap = new google.maps.Map($("#map_canvas")[0], options);
-            window.console.log('logging this.model.get(\'origin\') from render fn:');
-            window.console.log(this.model.get('origin'));
             if (this.model.get('origin') && this.model.get('destination')) {
                 this.route(myMap);
             }
@@ -25012,7 +24968,6 @@ define('app/views/mapView',[
     });
     return MapView;
 });
-
 define('app/routes/routes',[
     "backbone",
     "../collections/pitstopCollection",
@@ -27248,7 +27203,7 @@ define("bootstrap", function(){});
             "backbone": "vendor/backbone",
             "bootstrap": "vendor/bootstrap/js/bootstrap",
             "gmaps": "http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places",
-
+            "routeBoxer": "vendor/RouteBoxer",
             // application libraries
             "client": "app/app",
             "scripts": "app/scripts",
