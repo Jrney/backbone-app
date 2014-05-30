@@ -2,13 +2,15 @@ define([
     "backbone",
     "jquery",
     "hbs!app/templates/map",
-    "app/models/requestModel"
+    "app/models/requestModel",
+    "routeBoxer"
     //"app/models/mapModel"
 ], function(
     Backbone,
     $,
     mapTmpl,
-    RequestModel
+    RequestModel,
+    RouteBoxer
     //MapModel
 ) {
 
@@ -17,31 +19,10 @@ define([
         template: mapTmpl,
 
         initialize: function() {
-            window.console.log('logging this.model from initialize:')
-            window.console.dir(this.model);
+            var test = new RouteBoxer();
             this.$el.html(this.template());
             //this.model = this.model || new RequestModel();
             this.model.on("change", this.render, this);
-            //this.model = new RequestModel({});
-            // set a listener to the model
-            // this.model.on('change', this.render);
-            // in render clear this.$el or clear the map.
-
-            //var that = this;
-            // specify the element for the target of the click event.
-            // events: {
-            //   "click": "getNewRoute"},
-            //  getNewRoute: fucntion() {
-            //      this.model.origin.......
-            //  }
-            // $("#embarkDirection").on("click", function(e) {
-            //     e.preventDefault();
-
-            //     that.model.origin = $("#startInput").val();
-            //     that.model.destination = $("#endInput").val();
-
-            //     window.console.log(that.request);
-            // });
             this.render();
             return this;
         }, // end initialize
@@ -54,7 +35,8 @@ define([
             window.console.log("I've been fired by the click function");
             this.model.set({
                 origin: $("#startInput").val(),
-                destination: $("#endInput").val()
+                destination: $("#endInput").val(),
+                distance: 16
             });
 
             //this.model.set("destination", $("#endInput").val());
@@ -63,44 +45,62 @@ define([
         }, // end getNewRoute
 
         route: function(myMap) {
+            var that = this;
             var directionService = new google.maps.DirectionsService();
             var directionsRenderer = new google.maps.DirectionsRenderer({
                 map: myMap
             });
-            //var routeBoxer = new RouteBoxer();
-            // Clear any previous route boxes from the map
-            //need clear boxes function as dependency
-            //clearBoxes();
 
-            // Convert the distance to box around the route from miles to km
-            // var distance = parseFloat(document.getElementById("distance").value) * 1.609344;
-            // var that = this;
-            // var directions = {
-            //     origin: that.model.origin,
-            //     destination: that.model.destination,
-            //     travelMode: google.maps.DirectionsTravelMode.DRIVING
-            // });
-            // window.console.dir();
-            // window.console.dir(that.model.toJSON());
-
-            // Make the directions request
+            console.log(this.model.toJSON());
             directionService.route(this.model.toJSON(), function(result, status) {
+
                 if (status == google.maps.DirectionsStatus.OK) {
                     directionsRenderer.setDirections(result);
-                    //This is the blue line (path) of the route
+
                     var path = result.routes[0].overview_path;
+                    console.log(path);
 
-                    // Box around the overview path(declared above) of the first route
-                    //var boxes = routeBoxer.box(path, distance);
-
-
-                    // Call function elsewhere drawBoxes(boxes);
-                } else {
-                    alert("Directions query failed: " + status);
+                    var boxes = that.boxRoute(path);
+                    console.log(boxes);
+                    var boxpolys = new Array(boxes.length);
+                    this.drawBoxes(myMap, boxes, boxpolys);
                 }
             });
-            //return boxes;
+
+
         }, // end route
+
+        boxRoute: function(path) {
+
+            var routeBoxer = new RouteBoxer();
+            var boxes = routeBoxer.box(path, 16);
+            return boxes;
+
+        }, // end box route
+        drawBoxes: function(myMap, boxes, boxpolys) {
+            console.log('In the drawBoxes function');
+            for (var i = 0; i < boxes.length; i++) {
+                boxpolys[i] = new google.maps.Rectangle({
+                    bounds: boxes[i],
+                    fillOpacity: 0,
+                    strokeOpacity: 1.0,
+                    strokeColor: '#000000',
+                    strokeWeight: 1,
+                    // give an id to your boxpolys
+                    id: i,
+                    map: map
+                });
+            }
+
+        },
+        /*        clearBoxes: function(boxpolys) {
+            if (boxpolys != null) {
+                for (var i = 0; i < boxpolys.length; i++) {
+                    boxpolys[i].setMap(null);
+                }
+            }
+            boxpolys = null;
+        },*/
         render: function() {
             //this.remove();
             var options = {
@@ -110,8 +110,6 @@ define([
             };
 
             var myMap = new google.maps.Map($("#map_canvas")[0], options);
-            window.console.log('logging this.model.get(\'origin\') from render fn:');
-            window.console.log(this.model.get('origin'));
             if (this.model.get('origin') && this.model.get('destination')) {
                 this.route(myMap);
             }

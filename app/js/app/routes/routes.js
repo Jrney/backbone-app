@@ -210,13 +210,11 @@ define([
         map: function() {
             var request;
 
-            window.console.dir(this.indexView);
             if (this.indexView) {
                 request = this.indexView.model.toJSON();
             } else {
                 request = {};
             }
-            window.console.dir(request);
             this.mapView = new MapView({
                 model: new RequestModel(request)
             });

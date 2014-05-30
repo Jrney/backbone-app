@@ -4,8 +4,10 @@ module.exports = function(grunt) {
     /**
      * Strip comments from JSON file (naive) and return JS object.
      */
-    var _readJsonCfg = function (name) {
-        if (!grunt.file.exists(name)) { return "{}"; }
+    var _readJsonCfg = function(name) {
+        if (!grunt.file.exists(name)) {
+            return "{}";
+        }
         return JSON.parse(grunt.file.read(name).replace(/\/\/.*\n/g, ""));
     };
 
@@ -33,63 +35,58 @@ module.exports = function(grunt) {
 
         copy: {
             vendor: {
-                files: [
-                    {
-                        cwd: "<%= bowerPath %>",
-                        dest: "<%= vendorPath %>",
-                        expand: true,
-                        flatten: true,
-                        src: [
-                            // App libraries.
-                            "jquery/dist/jquery.js",
-                            "lodash/dist/lodash.underscore.js",
-                            "json2/json2.js",
-                            "backbone/backbone.js",
-                            "backbone.localStorage/backbone.localStorage.js",
-                            "requirejs-plugins/src/async.js",
-                            "requirejs-plugins/src/propertyParser.js",
-                            "requirejs-plugins/src/goog.js",
-                            "isotope/dist/isotope.pkgd.js",
+                files: [{
+                    cwd: "<%= bowerPath %>",
+                    dest: "<%= vendorPath %>",
+                    expand: true,
+                    flatten: true,
+                    src: [
+                        // App libraries.
+                        "jquery/dist/jquery.js",
+                        "lodash/dist/lodash.underscore.js",
+                        "json2/json2.js",
+                        "backbone/backbone.js",
+                        "backbone.localStorage/backbone.localStorage.js",
+                        "RouteBoxer/RouteBoxer.js",
+                        "requirejs-plugins/src/async.js",
+                        "requirejs-plugins/src/propertyParser.js",
+                        "requirejs-plugins/src/goog.js",
+                        "isotope/dist/isotope.pkgd.js",
 
-                            // Test libraries.
-                            "mocha/mocha.js",
-                            "mocha/mocha.css",
-                            "chai/chai.js",
-                        ]
-                    },
-                    {
-                        cwd: "<%= bowerPath %>/hbs",
-                        dest: "<%= vendorPath %>/hbs",
-                        expand: true,
-                        src: [
-                            "hbs/**",
-                            "hbs.js"
-                        ]
-                    },
-                    {
-                        cwd: "<%= bowerPath %>/bootstrap/dist",
-                        dest: "<%= vendorPath %>/bootstrap",
-                        expand: true,
-                        src: [
-                            "css/**",
-                            "fonts/**",
-                            "js/**"
-                        ]
-                    },
-                ]
+                        // Test libraries.
+                        "mocha/mocha.js",
+                        "mocha/mocha.css",
+                        "chai/chai.js",
+                    ]
+                }, {
+                    cwd: "<%= bowerPath %>/hbs",
+                    dest: "<%= vendorPath %>/hbs",
+                    expand: true,
+                    src: [
+                        "hbs/**",
+                        "hbs.js"
+                    ]
+                }, {
+                    cwd: "<%= bowerPath %>/bootstrap/dist",
+                    dest: "<%= vendorPath %>/bootstrap",
+                    expand: true,
+                    src: [
+                        "css/**",
+                        "fonts/**",
+                        "js/**"
+                    ]
+                }, ]
             },
             dist: {
-                files: [
-                    {
-                        cwd: "<%= bowerPath %>",
-                        dest: "<%= distPath %>",
-                        expand: true,
-                        flatten: true,
-                        src: [
-                            "requirejs/require.js"
-                        ]
-                    }
-                ]
+                files: [{
+                    cwd: "<%= bowerPath %>",
+                    dest: "<%= distPath %>",
+                    expand: true,
+                    flatten: true,
+                    src: [
+                        "requirejs/require.js"
+                    ]
+                }]
             }
         },
 
@@ -119,7 +116,7 @@ module.exports = function(grunt) {
 
                 },
                 files: {
-                    "app/css/app.css" : "app/css/less/style.less"
+                    "app/css/app.css": "app/css/less/style.less"
                 },
             },
         },
@@ -175,8 +172,8 @@ module.exports = function(grunt) {
 
         watch: {
             express: {
-                files: [ 'server/server.js' ],
-                tasks: [ 'express:dev' ],
+                files: ['server/server.js'],
+                tasks: ['express:dev'],
                 options: {
                     spawn: false
                 }
@@ -209,10 +206,10 @@ module.exports = function(grunt) {
         casper: {
             acceptance: {
                 options: {
-                    test:true,
+                    test: true,
                 },
                 files: {
-                    'test/acceptance/casper-results.xml':['test/acceptance/*_test.js']
+                    'test/acceptance/casper-results.xml': ['test/acceptance/*_test.js']
                 }
             }
         },
@@ -261,16 +258,16 @@ module.exports = function(grunt) {
 
     grunt.registerTask('casper:test', ['express:dev', 'casper']);
 
-    grunt.registerTask("karma:fast",  ["karma:mocha-fast"]);
-    grunt.registerTask("karma:ci",    ["karma:mocha-ci"]);
-    grunt.registerTask("karma:all",   ["karma:mocha-all"]);
-    grunt.registerTask("karma:dev",   ["karma:main"]);
+    grunt.registerTask("karma:fast", ["karma:mocha-fast"]);
+    grunt.registerTask("karma:ci", ["karma:mocha-ci"]);
+    grunt.registerTask("karma:all", ["karma:mocha-all"]);
+    grunt.registerTask("karma:dev", ["karma:main"]);
 
-    grunt.registerTask("test",        ["casper:test", "karma:fast"]);
+    grunt.registerTask("test", ["casper:test", "karma:fast"]);
 
-    grunt.registerTask("check",       ["jshint", "test"]);
-    grunt.registerTask("check:ci",    ["jshint", "karma:ci"]);
-    grunt.registerTask("check:all",   ["jshint", "casper:test","karma:all"]);
+    grunt.registerTask("check", ["jshint", "test"]);
+    grunt.registerTask("check:ci", ["jshint", "karma:ci"]);
+    grunt.registerTask("check:all", ["jshint", "casper:test", "karma:all"]);
 
     // ------------------------------------------------------------
     // Task: Default
