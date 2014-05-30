@@ -253,7 +253,7 @@ module.exports = function(grunt) {
     // Task: Build
     // ------------------------------------------------------------
 
-    grunt.registerTask('build', ['clean:vendor', 'copy:vendor', 'clean:dist', 'copy:dist', 'requirejs', 'less']);
+    grunt.registerTask('build', ['clean:vendor', 'copy:vendor', 'clean:dist', 'copy:dist', 'less', 'requirejs']);
 
     // ------------------------------------------------------------
     // Task: Test

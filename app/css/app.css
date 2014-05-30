@@ -36,6 +36,11 @@ h6 {
   margin: 0;
   padding: 0;
 }
+h2 {
+  color: #9d312e;
+  font-size: 2em;
+  font-style: italic;
+}
 p {
   font-family: sans-serif;
   font-size: 1em;
@@ -75,6 +80,10 @@ ol {
 img {
   height: auto;
   max-width: 100%;
+}
+h2.lead {
+  font-size: 2em;
+  font-weight: bold;
 }
 /* Fix for FlexSlider */
 .flexslider .slides img {
@@ -208,6 +217,15 @@ body {
 /*--------------------------------------------------------------------------------*/
 /*Tablet*/
 /*--------------------------------------------------------------------------------*/
+@media only screen and (min-width: 31.3125em) {
+  .navbar label {
+    color: #ffffff;
+  }
+  .navbar label + div {
+    display: inline-block;
+    vertical-align: top;
+  }
+}
 /* END min-width : 501px */
 /*Desktop*/
 /*--------------------------------------------------------------------------------*/
@@ -310,17 +328,24 @@ body {
 .detailsContainer img:nth-child(odd) {
   margin-right: 0;
 }
-.item {
+#container h2 {
+  margin: 1em 0;
+}
+#pitstopsContainer {
+  text-align: center;
+}
+#pitstopsContainer .item {
   width: 12em;
   margin: 5px;
   height: 16em;
-  background: #9098db;
-  border: 2px solid #232323;
+  padding: 0.325em;
+  border-radius: 5px 5px 5px 5px;
+  -moz-border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  background: rgba(250, 223, 176, 0.9);
+  border: 2px solid #6a5d66;
   display: inline-block;
   vertical-align: top;
-}
-.item:nth-child(4n + 4) {
-  margin-right: 0;
 }
 /*FORM STYLES*/
 /*--------------------------------------------------------------------------------------------------*/
@@ -382,6 +407,18 @@ Min - Width: 56.3125em
 @media only screen and (min-width: 56.3125em) {
   /*Pitstop Page*/
   /*--------------------------------------------------------------------------------*/
+  #container h2 {
+    margin: 1em 0;
+  }
+  #pitstopsContainer .item {
+    border-radius: 5px 5px 5px 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    background: #fadfb0;
+    border: 2px solid #cb7a5d;
+    display: inline-block;
+    vertical-align: top;
+  }
   .detailsContainer img {
     display: inline-block;
     vertical-align: top;
@@ -395,7 +432,7 @@ Min - Width: 56.3125em
     margin-right: 0;
   }
 }
-/* END min-width : 901px */
+/* END min-width : 901px*/
 /* END min-width : 801px */
 /*
 --------------------------------------------------------------

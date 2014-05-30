@@ -82,18 +82,26 @@
     }
 
 }
-.item {
-    width: 12em;
-    margin: 5px;
-    height: 16em;
-    background: #9098db;
-    border: 2px solid @black;
-    display: inline-block;
-    vertical-align: top;
-    &:nth-child(4n + 4) {
-        margin-right: 0;
+#container {
+    h2 {
+        margin: 1em 0;
     }
 }
+#pitstopsContainer {
+    text-align: center;
+    .item {
+        width: 12em;
+        margin: 5px;
+        height: 16em;
+        padding: 0.325em;
+        .BorderRadius;
+        background: fade(@yellow, 90%);
+        border: 2px solid @purple;
+        display: inline-block;
+        vertical-align: top;
+    }
+}
+
 
 
 
