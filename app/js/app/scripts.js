@@ -1,6 +1,4 @@
 define(["jquery"], function($) {
-
-console.log("frodo in the define");
 windowState = 'large';
 
   var iPhoneFlag = false;
@@ -9,7 +7,6 @@ windowState = 'large';
   }
 
 
-    console.log("blibo has been loaded in");
 /*
  * Screen Width Button (for development only. Located in the head)
  */
@@ -28,7 +25,6 @@ windowState = 'large';
     $('.entry iframe').wrap('<div class="embed-container" />');
 
     if( iPhoneFlag ) {
-        console.log('bilbo is here');
         var mohi_url = "comgooglemaps://?center=37.713924,-122.187849&zoom=14&views=traffic";
 
         $('#mohi_map').attr("href", mohi_url);

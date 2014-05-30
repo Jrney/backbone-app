@@ -266,11 +266,11 @@ module.exports = function(grunt) {
     grunt.registerTask("karma:all",   ["karma:mocha-all"]);
     grunt.registerTask("karma:dev",   ["karma:main"]);
 
-    grunt.registerTask("test",        ["karma:fast"]);
+    grunt.registerTask("test",        ["casper:test", "karma:fast"]);
 
     grunt.registerTask("check",       ["jshint", "test"]);
     grunt.registerTask("check:ci",    ["jshint", "karma:ci"]);
-    grunt.registerTask("check:all",   ["jshint", "karma:all"]);
+    grunt.registerTask("check:all",   ["jshint", "casper:test","karma:all"]);
 
     // ------------------------------------------------------------
     // Task: Default

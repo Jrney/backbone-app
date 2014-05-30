@@ -1,3 +1,3 @@
 define([
-  "spec/models/pitstopModel.spec"
+  "spec/models/pitstopModel.spec",
 ]);
