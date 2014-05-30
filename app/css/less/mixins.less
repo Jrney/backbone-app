@@ -85,6 +85,13 @@
     -ms-transform: rotate(@rotate) scale(@scale) skew(@skew) translate(@translate);
     transform: rotate(@rotate) scale(@scale) skew(@skew) translate(@translate);
 }
+.TransformCenter(@top: -50%, @left: -50%) {
+    -webkit-transform: translate(@top, @left);
+    -moz-transform: translate(@top, @left);
+    -o-transform: translate(@top, @left);
+    -ms-transform: translate(@top, @left);
+    transform: translate(@top, @left);
+}
 .Transition (@prop: all, @time: 0.5s, @ease: linear) {
     -webkit-transition: @prop @time @ease;
     -moz-transition: @prop @time @ease;

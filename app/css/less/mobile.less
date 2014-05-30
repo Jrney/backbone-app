@@ -1,26 +1,20 @@
 /*Home Page*/
 /*--------------------------------------------------------------------------------*/
-Input {
-    color: @black;
-}
+
     .homepageForm {
         position: absolute;
         left: 50%;
         top: 50%;
-        -webkit-transform: translate(-50%, -50%);
-        -moz-transform:    translate(-50%, -50%);
-        -ms-transform:     translate(-50%, -50%);
-        -o-transform:      translate(-50%, -50%);
-        transform:         translate(-50%, -50%);
+        .TransformCenter();
 
         width: 90%;
         height: auto;
 
         padding: 20px;
-        background: red;
+        background: @blue;
         color: white;
         box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
-
+        .BorderRadius(9px);
         a {
             margin: 0 auto;
             display: block;
@@ -31,23 +25,27 @@ Input {
 
 /*Map Page*/
 /*--------------------------------------------------------------------------------*/
-.pageHeader {
+.mapContainer {
     padding: 2em 1em;
-    text-align: center;
-}
-.categoryButtons, .pitstopButton {
-    padding: 2em 0;
-}
-.pitstopButton {
-    p {
-        font-weight: bold;
+    .pageHeader {
+        padding: 2em 1em;
+        text-align: center;
     }
+    .categoryButtons, .pitstopButton {
+        padding: 2em 1em;
+    }
+    .pitstopButton {
+        p {
+            font-weight: bold;
+        }
 
-}
-#map_canvas {
-    width: 100%;
-    height: 600px;
-}
+    }
+    #map_canvas {
+        width: 100%;
+        height: 600px;
+    }
+}// end .mapContiner
+
 .mapInfoContainer {
 
 }
