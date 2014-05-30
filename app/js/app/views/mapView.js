@@ -1,99 +1,102 @@
 define([
-    "backbone",
-    "jquery",
-    "hbs!app/templates/map",
-    "app/models/requestModel",
-    "routeBoxer"
-    //"app/models/mapModel"
-], function(
-    Backbone,
-    $,
-    mapTmpl,
-    RequestModel,
-    RouteBoxer
-    //MapModel
-) {
+        "backbone",
+        "jquery",
+        "hbs!app/templates/map",
+        "app/models/requestModel"
+        // "routeBoxer"
+        //"app/models/mapModel"
+    ], function(
+        Backbone,
+        $,
+        mapTmpl,
+        RequestModel
+        // RouteBoxer
+        //MapModel
+    ) {
 
-    var MapView = Backbone.View.extend({
-        el: "#viewWrapper",
-        template: mapTmpl,
+        var MapView = Backbone.View.extend({
+                el: "#viewWrapper",
+                template: mapTmpl,
 
-        initialize: function() {
-            var test = new RouteBoxer();
-            this.$el.html(this.template());
-            //this.model = this.model || new RequestModel();
-            this.model.on("change", this.render, this);
-            this.render();
-            return this;
-        }, // end initialize
+                initialize: function() {
+                    // var test = new RouteBoxer();
+                    this.$el.html(this.template());
+                    //this.model = this.model || new RequestModel();
+                    this.model.on("change", this.render, this);
+                    this.render();
+                    return this;
+                }, // end initialize
 
-        events: {
-            "click #embarkDirection": "getNewRoute"
-        }, // end events
+                events: {
+                    "click #embarkDirection": "getNewRoute"
+                }, // end events
 
-        getNewRoute: function() {
-            window.console.log("I've been fired by the click function");
-            this.model.set({
-                origin: $("#startInput").val(),
-                destination: $("#endInput").val(),
-                distance: 16
-            });
+                getNewRoute: function() {
+                    window.console.log("I've been fired by the click function");
+                    this.model.set({
+                        origin: $("#startInput").val(),
+                        destination: $("#endInput").val(),
+                        distance: 16
+                    });
 
-            //this.model.set("destination", $("#endInput").val());
+                    //this.model.set("destination", $("#endInput").val());
 
-            return this;
-        }, // end getNewRoute
+                    return this;
+                }, // end getNewRoute
 
-        route: function(myMap) {
-            var that = this;
-            var directionService = new google.maps.DirectionsService();
-            var directionsRenderer = new google.maps.DirectionsRenderer({
-                map: myMap
-            });
+                route: function(myMap) {
+                    var that = this;
+                    var directionService = new google.maps.DirectionsService();
+                    var directionsRenderer = new google.maps.DirectionsRenderer({
+                        map: myMap
+                    });
 
-            console.log(this.model.toJSON());
-            directionService.route(this.model.toJSON(), function(result, status) {
+                    console.log(this.model.toJSON());
+                    directionService.route(this.model.toJSON(), function(result, status) {
 
-                if (status == google.maps.DirectionsStatus.OK) {
-                    directionsRenderer.setDirections(result);
+                        if (status == google.maps.DirectionsStatus.OK) {
+                            directionsRenderer.setDirections(result);
 
-                    var path = result.routes[0].overview_path;
-                    console.log(path);
+                            var path = result.routes[0].overview_path;
+                            //console.log(path);
 
-                    var boxes = that.boxRoute(path);
+                            var boxes = that.boxRoute(path);
+                            //console.log(boxes);
+                            var boxpolys = new Array(boxes.length);
+
+                            that.drawBoxes(myMap, boxes, boxpolys);
+                        }
+                    });
+
+
+                }, // end route
+
+                boxRoute: function(path) {
+
+                    var routeBoxer = new RouteBoxer();
+
+                    var boxes = routeBoxer.box(path, 1);
+
                     console.log(boxes);
-                    var boxpolys = new Array(boxes.length);
-                    this.drawBoxes(myMap, boxes, boxpolys);
+                    return boxes;
+
+                }, // end box route
+                drawBoxes: function(myMap, boxes, boxpolys) {] console.log('In the drawBoxes function');
+                for (var i = 0; i < boxes.length; i++) {
+                    boxpolys[i] = new google.maps.Rectangle({
+                        bounds: boxes[i],
+                        fillOpacity: 0,
+                        strokeOpacity: 1.0,
+                        strokeColor: '#000000',
+                        strokeWeight: 1,
+                        // give an id to your boxpolys
+                        id: i,
+                        map: myMap
+                    });
                 }
-            });
 
-
-        }, // end route
-
-        boxRoute: function(path) {
-
-            var routeBoxer = new RouteBoxer();
-            var boxes = routeBoxer.box(path, 16);
-            return boxes;
-
-        }, // end box route
-        drawBoxes: function(myMap, boxes, boxpolys) {
-            console.log('In the drawBoxes function');
-            for (var i = 0; i < boxes.length; i++) {
-                boxpolys[i] = new google.maps.Rectangle({
-                    bounds: boxes[i],
-                    fillOpacity: 0,
-                    strokeOpacity: 1.0,
-                    strokeColor: '#000000',
-                    strokeWeight: 1,
-                    // give an id to your boxpolys
-                    id: i,
-                    map: map
-                });
-            }
-
-        },
-        /*        clearBoxes: function(boxpolys) {
+            },
+            /*        clearBoxes: function(boxpolys) {
             if (boxpolys != null) {
                 for (var i = 0; i < boxpolys.length; i++) {
                     boxpolys[i].setMap(null);
@@ -101,21 +104,21 @@ define([
             }
             boxpolys = null;
         },*/
-        render: function() {
-            //this.remove();
-            var options = {
-                center: new google.maps.LatLng(47.620467, -122.349116),
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                zoom: 16
-            };
+            render: function() {
+                //this.remove();
+                var options = {
+                    center: new google.maps.LatLng(47.620467, -122.349116),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    zoom: 16
+                };
 
-            var myMap = new google.maps.Map($("#map_canvas")[0], options);
-            if (this.model.get('origin') && this.model.get('destination')) {
-                this.route(myMap);
+                var myMap = new google.maps.Map($("#map_canvas")[0], options);
+                if (this.model.get('origin') && this.model.get('destination')) {
+                    this.route(myMap);
+                }
+
+                return myMap;
             }
-
-            return myMap;
-        }
-    });
+        });
     return MapView;
 });
