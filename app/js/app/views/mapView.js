@@ -51,19 +51,19 @@ define([
                 map: myMap
             });
 
-            console.log(this.model.toJSON());
+            window.console.log(this.model.toJSON());
             directionService.route(this.model.toJSON(), function(result, status) {
 
-                if (status == google.maps.DirectionsStatus.OK) {
+                if (status === google.maps.DirectionsStatus.OK) {
                     directionsRenderer.setDirections(result);
 
                     var path = result.routes[0].overview_path;
-                    console.log(path);
+                    window.console.log(path);
 
                     var boxes = that.boxRoute(path);
                     //console.log(boxes);
                     var boxpolys = new Array(boxes.length);
-                    console.log("about to drop boxes");
+                    window.console.log("about to drop boxes");
                     that.drawBoxes(myMap, boxes, boxpolys);
                 }
             });
@@ -72,23 +72,23 @@ define([
         }, // end route
 
         boxRoute: function(path) {
-            console.log("i'm in box route");
+            window.console.log("i'm in box route");
             var routeBoxer = new RouteBoxer();
 
             var boxes = routeBoxer.box(path, 10);
 
-            console.log(boxes);
+            window.console.log(boxes);
             return boxes;
 
         }, // end box route
         drawBoxes: function(myMap, boxes, boxpolys) {
-            console.log('In the drawBoxes function');
+            window.console.log("In the drawBoxes function");
             for (var i = 0; i < boxes.length; i++) {
                 boxpolys[i] = new google.maps.Rectangle({
                     bounds: boxes[i],
                     fillOpacity: 0,
                     strokeOpacity: 1.0,
-                    strokeColor: '#000000',
+                    strokeColor: "#000000",
                     strokeWeight: 1,
                     // give an id to your boxpolys
                     id: i,
@@ -114,7 +114,7 @@ define([
             };
 
             var myMap = new google.maps.Map($("#map_canvas")[0], options);
-            if (this.model.get('origin') && this.model.get('destination')) {
+            if (this.model.get("origin") && this.model.get("destination")) {
                 this.route(myMap);
             }
 
