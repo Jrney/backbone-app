@@ -206,16 +206,45 @@ module.exports = function(grunt) {
         // Tests
         // ------------------------------------------------------------
 
-        mocha: {
-            test: {
-                src: [
-                    "test/js/test.html"
-                ],
+        casper: {
+            acceptance: {
                 options: {
-                    run: true,
+                    test:true,
                 },
-            },
+                files: {
+                    'test/acceptance/casper-results.xml':['test/acceptance/*_test.js']
+                }
+            }
         },
+
+        // ------------------------------------------------------------------------
+        // Karma test driver.
+        // ------------------------------------------------------------------------
+        // See: http://karma-runner.github.io/0.8/plus/RequireJS.html
+        // See: https://github.com/kjbekkelund/karma-requirejs
+
+        karma: {
+            "mocha-fast": {
+                configFile: 'karma.conf.js',
+                singleRun: true,
+                browsers: ["PhantomJS"]
+            },
+            "mocha-windows": {
+                configFile: 'karma.conf.js',
+                singleRun: true,
+                browsers: ["PhantomJS", "IE", "Chrome"]
+            },
+            "mocha-ci": {
+                configFile: 'karma.conf.js',
+                singleRun: true,
+                browsers: ["PhantomJS", "Firefox"]
+            },
+            "mocha-all": {
+                configFile: 'karma.conf.js',
+                singleRun: true,
+                browsers: ["PhantomJS", "Chrome", "Firefox", "Safari"]
+            }
+        }
     });
 
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
@@ -230,7 +259,18 @@ module.exports = function(grunt) {
     // Task: Test
     // ------------------------------------------------------------
 
-    grunt.registerTask('test', ['express:dev', 'jshint', 'mocha']);
+    grunt.registerTask('casper:test', ['express:dev', 'casper']);
+
+    grunt.registerTask("karma:fast",  ["karma:mocha-fast"]);
+    grunt.registerTask("karma:ci",    ["karma:mocha-ci"]);
+    grunt.registerTask("karma:all",   ["karma:mocha-all"]);
+    grunt.registerTask("karma:dev",   ["karma:main"]);
+
+    grunt.registerTask("test",        ["casper:test", "karma:fast"]);
+
+    grunt.registerTask("check",       ["jshint", "test"]);
+    grunt.registerTask("check:ci",    ["jshint", "karma:ci"]);
+    grunt.registerTask("check:all",   ["jshint", "casper:test","karma:all"]);
 
     // ------------------------------------------------------------
     // Task: Default
@@ -240,12 +280,3 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['build', 'express:dev', 'watch']);
 
 };
-
-
-
-
-
-
-
-
-
