@@ -24920,7 +24920,7 @@ define('app/views/mapView',[
 
             var routeBoxer = new RouteBoxer();
 
-            var boxes = routeBoxer.box(path, 1);
+            var boxes = routeBoxer.box(path, 10);
 
             console.log(boxes);
             return boxes;
