@@ -7,12 +7,11 @@ Starting point for the Code Fellows "Along the Way" group project.
 * BackboneJS
 * NodeJS
 * ExpressJS
+* Karma
+* Grunt
 * Mocha and Chai
 * Twitter Bootstrap
 * LESS
-* MongoDB
-* Mongoose
+* Isotope
 
 See branches for development progress.
-
-This is the development branch that Nick is using to build the full skeleton for the Jrney Map app.

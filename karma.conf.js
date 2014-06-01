@@ -16,10 +16,6 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'test-main.js',
-      //'requirejs.conf.js',
-      //'app/js/config.js',
-      //'test/js/main-karma.js',
-      //'karma.conf.js',
       {pattern: 'app/js/vendor/**/*.js', included: false},
       {pattern: 'app/js/app/**/*.js', included: false},
       //{pattern: 'app/js/*.js', included: false},
@@ -30,7 +26,6 @@ module.exports = function(config) {
 
     // list of files to exclude
     exclude: [
-        //'app/js/config.js'
     ],
 
 

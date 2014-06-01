@@ -9,7 +9,7 @@ define([
     Isotope,
     AppRouter
 ) {
-    //ISOTOPE
+    // ISOTOPE
     // var iso = new Isotope ("#container", {
     //     itemSelector: '.item',
     //     layoutMode: 'masonry',

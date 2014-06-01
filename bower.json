@@ -1,0 +1,35 @@
+{
+  "name": "y",
+  "version": "0.0.1",
+  "homepage": "https://github.com/Jrney/backbone-app",
+  "authors": [
+    "Chelsea Lura <mail@chelsealura.com>"
+  ],
+  "description": "Jrney, Along the Way App",
+  "keywords": [
+    "map",
+    "pitstops"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "backbone": "~1.1.2",
+    "backbone.localStorage": "~1.1.7",
+    "chai": "~1.9.1",
+    "bootstrap": "~3.1.1",
+    "hbs": "~0.8.0",
+    "isotope": "~2.0.0",
+    "json2": "*",
+    "lodash": "~2.4.1",
+    "mocha": "~1.19.0",
+    "requirejs-plugins": "~1.0.2",
+    "requirejs": "~2.1.11"
+  }
+}
