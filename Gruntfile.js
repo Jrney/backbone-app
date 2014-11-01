@@ -46,7 +46,7 @@ module.exports = function(grunt) {
                             "json2/json2.js",
                             "backbone/backbone.js",
                             "backbone.localStorage/backbone.localStorage.js",
-                            "routeBoxer/RouteBoxer.js",
+                            // no longer use "routeBoxer/RouteBoxer.js",
                             "requirejs-plugins/src/async.js",
                             "requirejs-plugins/src/propertyParser.js",
                             "requirejs-plugins/src/goog.js",

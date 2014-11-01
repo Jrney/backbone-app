@@ -36,7 +36,7 @@ define([
             this.model.set({
                 origin: $("#startInput").val(),
                 destination: $("#endInput").val(),
-                distance: 16
+                travelMode: google.maps.DirectionsTravelMode.DRIVING
             });
 
             //this.model.set("destination", $("#endInput").val());

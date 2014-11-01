@@ -17,7 +17,7 @@ define([
     MapView,
     RequestModel
 ) {
-    var fakeGoogleJson =
+    var fakeGoogleJSON =
         [{
         "formatted_address": "529 Kent Street, Sydney NSW, Australia",
         "geometry": {
@@ -223,7 +223,7 @@ define([
         },
         pitstops: function() {
             this.collection = new Backbone.Collection();
-            this.collection.reset(fakeGoogleJson);
+            this.collection.reset(fakeGoogleJSON);
 
             this.pitstopView = new PitstopCollectionView({
                 collection: this.collection

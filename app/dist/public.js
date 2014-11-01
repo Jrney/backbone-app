@@ -24821,7 +24821,7 @@ define('app/views/indexView',[
     });
     return IndexView;
 });
-define('app/models/mapModel',['backbone'], function(Backbone) {
+define('app/models/mapModel',["backbone"], function(Backbone) {
     var MapModel = Backbone.Model.extend({
         defaults: {}
     });
@@ -24881,7 +24881,7 @@ define('app/views/mapView',[
             this.model.set({
                 origin: $("#startInput").val(),
                 destination: $("#endInput").val(),
-                distance: 16
+                travelMode: google.maps.DirectionsTravelMode.DRIVING
             });
 
             //this.model.set("destination", $("#endInput").val());
@@ -24896,19 +24896,19 @@ define('app/views/mapView',[
                 map: myMap
             });
 
-            console.log(this.model.toJSON());
+            window.console.log(this.model.toJSON());
             directionService.route(this.model.toJSON(), function(result, status) {
 
-                if (status == google.maps.DirectionsStatus.OK) {
+                if (status === google.maps.DirectionsStatus.OK) {
                     directionsRenderer.setDirections(result);
 
                     var path = result.routes[0].overview_path;
-                    console.log(path);
+                    window.console.log(path);
 
                     var boxes = that.boxRoute(path);
                     //console.log(boxes);
                     var boxpolys = new Array(boxes.length);
-                    console.log("about to drop boxes");
+                    window.console.log("about to drop boxes");
                     that.drawBoxes(myMap, boxes, boxpolys);
                 }
             });
@@ -24917,23 +24917,23 @@ define('app/views/mapView',[
         }, // end route
 
         boxRoute: function(path) {
-            console.log("i'm in box route");
+            window.console.log("i'm in box route");
             var routeBoxer = new RouteBoxer();
 
             var boxes = routeBoxer.box(path, 10);
 
-            console.log(boxes);
+            window.console.log(boxes);
             return boxes;
 
         }, // end box route
         drawBoxes: function(myMap, boxes, boxpolys) {
-            console.log('In the drawBoxes function');
+            window.console.log("In the drawBoxes function");
             for (var i = 0; i < boxes.length; i++) {
                 boxpolys[i] = new google.maps.Rectangle({
                     bounds: boxes[i],
                     fillOpacity: 0,
                     strokeOpacity: 1.0,
-                    strokeColor: '#000000',
+                    strokeColor: "#000000",
                     strokeWeight: 1,
                     // give an id to your boxpolys
                     id: i,
@@ -24959,7 +24959,7 @@ define('app/views/mapView',[
             };
 
             var myMap = new google.maps.Map($("#map_canvas")[0], options);
-            if (this.model.get('origin') && this.model.get('destination')) {
+            if (this.model.get("origin") && this.model.get("destination")) {
                 this.route(myMap);
             }
 
@@ -24987,7 +24987,7 @@ define('app/routes/routes',[
     MapView,
     RequestModel
 ) {
-    var fakeGoogleJson =
+    var fakeGoogleJSON =
         [{
         "formatted_address": "529 Kent Street, Sydney NSW, Australia",
         "geometry": {
@@ -25193,7 +25193,7 @@ define('app/routes/routes',[
         },
         pitstops: function() {
             this.collection = new Backbone.Collection();
-            this.collection.reset(fakeGoogleJson);
+            this.collection.reset(fakeGoogleJSON);
 
             this.pitstopView = new PitstopCollectionView({
                 collection: this.collection
@@ -25215,7 +25215,7 @@ define('client',[
     Isotope,
     AppRouter
 ) {
-    //ISOTOPE
+    // ISOTOPE
     // var iso = new Isotope ("#container", {
     //     itemSelector: '.item',
     //     layoutMode: 'masonry',
@@ -25228,6 +25228,7 @@ define('client',[
         router.start();
     });
 });
+
 /*!
  * Bootstrap v3.1.1 (http://getbootstrap.com)
  * Copyright 2011-2014 Twitter, Inc.
@@ -27203,7 +27204,8 @@ define("bootstrap", function(){});
             "backbone": "vendor/backbone",
             "bootstrap": "vendor/bootstrap/js/bootstrap",
             "gmaps": "http://maps.googleapis.com/maps/api/js?v=3.exp?key={AIzaSyAckmSzoxdbOdFhNltb9ufCWuTackzcupc}&sensor=false&libraries=places",
-            "routeBoxer": "vendor/RouteBoxer",
+            // no longer use "routeBoxer": "vendor/RouteBoxer",
+
             // application libraries
             "client": "app/app",
             "scripts": "app/scripts",
