@@ -110,7 +110,8 @@ define([
             var options = {
                 center: new google.maps.LatLng(47.620467, -122.349116),
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
-                zoom: 16
+                zoom: 16,
+                scrollwheel: false
             };
 
             var myMap = new google.maps.Map($("#map_canvas")[0], options);
