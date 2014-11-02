@@ -116,29 +116,45 @@ define([
             function callback(results,status){
                 if( status == google.maps.places.PlacesServiceStatus.OK){
                     //for (var i = 0; i < results.length; i++){
+/*                     var placeNames = [];
+                       var placeMarkers = [];
+                       var placeInfoWindows = [];
+                       */
                        for( var i = 0; i < 2 ; i++){
                         var place = results[i];
-                        console.log('place ' + i + ' id: ' + place.id);
-                        console.log('place ' + i + ' name: ' + place.name);
-                        console.log('place ' + i + ' geometry.location: '+ place.geometry.location);    
+
+/*                        console.log('place ' + i + ' id: ' + place.id);
+                          console.log('place ' + i + ' name: ' + place.name);
+                          console.log('place ' + i + ' geometry.location: '+ place.geometry.location);  */
+
                             /* Place Object properties:
                             * geometry (props: location) , icon, id, name, place_id,
                             * reference,scopoe,types,vicinity,
                             * html_attributions
                             */
+/*                        placeNames.push(place.name);*/
+
                         var marker = new google.maps.Marker({
                             position: place.geometry.location,
                             title: place.name,
                             animation: google.maps.Animation.DROP,
 
                          });
+/*
+                        placeMarkers.push(marker);*/
+
                         var infowindow = new google.maps.InfoWindow({
                         content: place.name
                             });
+                        marker.setMap(myMap);
+
+                /* the below code is overwriting the event listener at each point in the loop 
+                * fix it!
+                */
                         google.maps.event.addListener(marker, 'click', function(){
                              infowindow.open(myMap, marker);
                         });
-                        marker.setMap(myMap);
+                        
                     }
                 }
             }
