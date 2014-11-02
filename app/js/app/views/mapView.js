@@ -119,12 +119,17 @@ define([
                         var place = results[i];
                         console.log('place ' + i + ' id: ' + place.id);
                         console.log('place ' + i + ' name: ' + place.name);
-                        /* Place Object properties:
-                        * geometry, icon, id, name, place_id,
-                        * reference,scope,types,vicinity,
-                        * html_attributions
-                        */
-                        //createMarker(results[i]);
+                        console.log('place ' + i + ' geometry.location: '+ place.geometry.location);    
+                            /* Place Object properties:
+                            * geometry (props: location) , icon, id, name, place_id,
+                            * reference,scopoe,types,vicinity,
+                            * html_attributions
+                            */
+                        var marker = new google.maps.Marker({
+                            position: place.geometry.location,
+                            title: place.name
+                         });
+                        marker.setMap(myMap);
                     }
                 }
             }
