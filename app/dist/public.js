@@ -24903,13 +24903,17 @@ define('app/views/mapView',[
                     directionsRenderer.setDirections(result);
 
                     var path = result.routes[0].overview_path;
-                    window.console.log(path);
+                    window.console.log('path: ' + path);
 
                     var boxes = that.boxRoute(path);
-                    //console.log(boxes);
+                    console.log('boxes.length' + boxes.length);
                     var boxpolys = new Array(boxes.length);
                     window.console.log("about to drop boxes");
                     that.drawBoxes(myMap, boxes, boxpolys);
+                    // get places from boxes 
+                    window.console.log("about to get places");
+                    that.getPlaces(myMap, boxes);
+
                 }
             });
 
@@ -24917,18 +24921,16 @@ define('app/views/mapView',[
         }, // end route
 
         boxRoute: function(path) {
-            window.console.log("i'm in box route");
+            window.console.log("i'm in boxRoute");
             var routeBoxer = new RouteBoxer();
-
-            var boxes = routeBoxer.box(path, 10);
-
-            window.console.log(boxes);
+            var boxes = routeBoxer.box(path, .5);
             return boxes;
 
         }, // end box route
         drawBoxes: function(myMap, boxes, boxpolys) {
-            window.console.log("In the drawBoxes function");
+            window.console.log("i'm in drawBoxes");
             for (var i = 0; i < boxes.length; i++) {
+                console.log('Building box ' + i + ' from bounds');
                 boxpolys[i] = new google.maps.Rectangle({
                     bounds: boxes[i],
                     fillOpacity: 0,
@@ -24941,7 +24943,38 @@ define('app/views/mapView',[
                 });
             }
 
+        }, //get places from boxes areas
+        getPlaces: function(myMap, boxes){
+
+            window.console.log("i'm in getPlaces");
+            var service = new google.maps.places.PlacesService(myMap);
+            for(var i = 0; i < boxes.length; i++){      
+                var request = {
+                    bounds: boxes[i],
+                    radius: '5',
+                    types: ['store']
+                };
+
+                service.nearbySearch(request, callback);
+            }
+
+            function callback(results,status){
+                if( status == google.maps.places.PlacesServiceStatus.OK){
+                    for (var i = 0; i < results.length; i++){
+                        var place = results[i];
+                        console.log('place ' + i + ' id: ' + place.id);
+                        console.log('place ' + i + ' name: ' + place.name);
+                        /* Place Object properties:
+                        * geometry, icon, id, name, place_id,
+                        * reference,scope,types,vicinity,
+                        * html_attributions
+                        */
+                        //createMarker(results[i]);
+                    }
+                }
+            }
         },
+
         /*        clearBoxes: function(boxpolys) {
             if (boxpolys != null) {
                 for (var i = 0; i < boxpolys.length; i++) {
