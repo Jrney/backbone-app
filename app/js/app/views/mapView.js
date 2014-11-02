@@ -78,7 +78,7 @@ define([
         boxRoute: function(path) {
             window.console.log("i'm in boxRoute");
             var routeBoxer = new RouteBoxer();
-            var boxes = routeBoxer.box(path, .5);
+            var boxes = routeBoxer.box(path, 1);
             return boxes;
 
         }, // end box route
@@ -115,7 +115,8 @@ define([
 
             function callback(results,status){
                 if( status == google.maps.places.PlacesServiceStatus.OK){
-                    for (var i = 0; i < results.length; i++){
+                    //for (var i = 0; i < results.length; i++){
+                       for( var i = 0; i < 2 ; i++){
                         var place = results[i];
                         console.log('place ' + i + ' id: ' + place.id);
                         console.log('place ' + i + ' name: ' + place.name);
@@ -127,12 +128,21 @@ define([
                             */
                         var marker = new google.maps.Marker({
                             position: place.geometry.location,
-                            title: place.name
+                            title: place.name,
+                            animation: google.maps.Animation.DROP,
+
                          });
+                        var infowindow = new google.maps.InfoWindow({
+                        content: place.name
+                            });
+                        google.maps.event.addListener(marker, 'click', function(){
+                             infowindow.open(myMap, marker);
+                        });
                         marker.setMap(myMap);
                     }
                 }
             }
+
         },
 
         /*        clearBoxes: function(boxpolys) {
