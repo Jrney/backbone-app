@@ -24945,7 +24945,7 @@ define('app/views/mapView',[
 
         }, //get places from boxes areas
         getPlaces: function(myMap, boxes){
-
+            var that = this;
             window.console.log("i'm in getPlaces");
             var service = new google.maps.places.PlacesService(myMap);
             for(var i = 0; i < boxes.length; i++){      
@@ -24963,39 +24963,67 @@ define('app/views/mapView',[
                     //for (var i = 0; i < results.length; i++){
                        var placeNames = [];
                        var placeMarkers = [];
-                       var placeInfoWindows = [];
-                       for( var i = 0; i < 2 ; i++){
-                        var place = results[i];
-                        console.log('place ' + i + ' id: ' + place.id);
-                        console.log('place ' + i + ' name: ' + place.name);
-                        console.log('place ' + i + ' geometry.location: '+ place.geometry.location);    
+                      // var placeInfoWindows = [];
+                       
+                       for( var j = 0; j < results.length ; ++j){
+                        var place = results[j];
+
+/*                        console.log('place ' + i + ' id: ' + place.id);
+                          console.log('place ' + i + ' name: ' + place.name);
+                          console.log('place ' + i + ' geometry.location: '+ place.geometry.location);  */
+
                             /* Place Object properties:
                             * geometry (props: location) , icon, id, name, place_id,
                             * reference,scopoe,types,vicinity,
                             * html_attributions
                             */
                         placeNames.push(place.name);
+
                         var marker = new google.maps.Marker({
                             position: place.geometry.location,
                             title: place.name,
-                            animation: google.maps.Animation.DROP,
+                            animation: google.maps.Animation.DROP
 
                          });
-
                         placeMarkers.push(marker);
-                        var infowindow = new google.maps.InfoWindow({
-                        content: place.name
-                            });
-                        google.maps.event.addListener(marker, 'click', function(){
-                             infowindow.open(myMap, marker);
-                        });
+                        console.log('placeMarkers ' + j + ': ' + Object.getOwnPropertyNames(placeMarkers[j]));
+                        /*  
+                        *   placeMarkers props: gm_accessors_,position,
+                        *   gm_bindings_,title,animation,clickable,
+                        *   visible
+                        */
+
+                        /*placeInfoWindows props: gm_accessors_,content,gm_bindings_*/
                         marker.setMap(myMap);
                     }
-                }
+
+                    for(var k = 0; k < results.length; k += 1 ){
+                        google.maps.event.addListener(placeMarkers[k], 'click', function(){
+                            console.dir(this);
+                            var infowindow = new google.maps.InfoWindow({
+                              content: this.title
+                            });
+                            that.showInfo(this, infowindow, myMap);
+                        });                  
+                    }
+/*                      var k=0;     
+                        google.maps.event.addListener(placeMarkers[k], 'click', function(){
+                                that.showInfo(placeMarkers[k], placeInfoWindows[k], myMap);
+                        });
+
+                        var l=1;     
+                        google.maps.event.addListener(placeMarkers[l], 'click', function(){
+                                that.showInfo(placeMarkers[l], placeInfoWindows[l], myMap);
+                        });*/
+                
             }
 
-        },
+        }
+    },
+        showInfo: function(marker, infowindow, map){
+                             infowindow.open(map, marker);
 
+        },
         /*        clearBoxes: function(boxpolys) {
             if (boxpolys != null) {
                 for (var i = 0; i < boxpolys.length; i++) {

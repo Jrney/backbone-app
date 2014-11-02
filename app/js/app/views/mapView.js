@@ -100,7 +100,7 @@ define([
 
         }, //get places from boxes areas
         getPlaces: function(myMap, boxes){
-
+            var that = this;
             window.console.log("i'm in getPlaces");
             var service = new google.maps.places.PlacesService(myMap);
             for(var i = 0; i < boxes.length; i++){      
@@ -116,12 +116,12 @@ define([
             function callback(results,status){
                 if( status == google.maps.places.PlacesServiceStatus.OK){
                     //for (var i = 0; i < results.length; i++){
-/*                     var placeNames = [];
+                       var placeNames = [];
                        var placeMarkers = [];
-                       var placeInfoWindows = [];
-                       */
-                       for( var i = 0; i < 2 ; i++){
-                        var place = results[i];
+                      // var placeInfoWindows = [];
+                       
+                       for( var j = 0; j < results.length ; ++j){
+                        var place = results[j];
 
 /*                        console.log('place ' + i + ' id: ' + place.id);
                           console.log('place ' + i + ' name: ' + place.name);
@@ -132,35 +132,44 @@ define([
                             * reference,scopoe,types,vicinity,
                             * html_attributions
                             */
-/*                        placeNames.push(place.name);*/
+                        placeNames.push(place.name);
 
                         var marker = new google.maps.Marker({
                             position: place.geometry.location,
                             title: place.name,
-                            animation: google.maps.Animation.DROP,
+                            animation: google.maps.Animation.DROP
 
                          });
-/*
-                        placeMarkers.push(marker);*/
-
-                        var infowindow = new google.maps.InfoWindow({
-                        content: place.name
-                            });
+                        placeMarkers.push(marker);
+                        console.log('placeMarkers ' + j + ': ' + Object.getOwnPropertyNames(placeMarkers[j]));
+                        /*  
+                        *   placeMarkers props: gm_accessors_,position,
+                        *   gm_bindings_,title,animation,clickable,
+                        *   visible
+                        */
                         marker.setMap(myMap);
-
-                /* the below code is overwriting the event listener at each point in the loop 
-                * fix it!
-                */
-                        google.maps.event.addListener(marker, 'click', function(){
-                             infowindow.open(myMap, marker);
-                        });
-                        
                     }
-                }
+
+                    /* On click, make an info window with the name of the location
+                    */
+                    for(var k = 0; k < results.length; k += 1 ){
+                        google.maps.event.addListener(placeMarkers[k], 'click', function(){
+                            console.dir(this);
+                            var infowindow = new google.maps.InfoWindow({
+                              content: this.title
+                            });
+                            that.showInfo(this, infowindow, myMap);
+                        });                  
+                    }
+                
             }
 
-        },
+        }
+    },
+        showInfo: function(marker, infowindow, map){
+                             infowindow.open(map, marker);
 
+        },
         /*        clearBoxes: function(boxpolys) {
             if (boxpolys != null) {
                 for (var i = 0; i < boxpolys.length; i++) {
