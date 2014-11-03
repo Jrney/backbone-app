@@ -24837,7 +24837,7 @@ helpers = this.merge(helpers, Handlebars.helpers);
   
 
 
-  return "<div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">\n    <div class=\"container\">\n        <div class=\"navbar-header\">\n            <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">\n                <span class=\"sr-only\">Toggle navigation</span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n            </button>\n            <a class=\"navbar-brand\" href=\"#\">Jrney</a>\n        </div>\n        <div class=\"collapse navbar-collapse\">\n            <form class=\"form-inline navForm\" role=\"form\">\n                <div class=\"form-group\">\n                    <label for=\"startingSelect\" class=\"col-sm-3 control-label\">Origin</label>\n                    <div class=\"col-sm-8\">\n                        <input id=\"startInput\" type=\"text\" name=\"startPoint\" value=\"\" placeholder=\"start point\">\n                    </div>\n                </div>\n                <div class=\"form-group\">\n                    <label for=\"endingSelect\" class=\"col-sm-3 control-label\">Finish</label>\n                    <div class=\"col-sm-8\">\n                        <input id=\"endInput\" type=\"text\" name=\"endPoint\" value=\"\" placeholder=\"end point\">\n                    </div>\n                </div>\n                <button id=\"embarkDirection\" type=\"button\" class=\"btn btn-primary\">Embark</button>\n            </form>\n<!-- end .navForm -->\n        </div><!--/.nav-collapse -->\n    </div>\n</div>\n<!-- end .navbar -->\n<div class=\"mapContainer container\">\n    <div class=\"pageHeader\">\n        <h1>Along the Way Project brought to you by Jrney</h1>\n        <h2 class=\"lead\">The jrney is what is important.<br> Not the destination.</h2>\n    </div>\n    <div class=\"row\">\n        <div class=\"col-md-8 categoryButtons\">\n            <p><b>Filter by:</b></p>\n            <a href=\"#\" class=\"btn btn-primary\">MOHI</a>\n            <a id=\"foodButton\" href=\"#\" class=\"btn btn-default\">Food</a>\n            <a href=\"#\" class=\"btn btn-default\">Clothes</a>\n            <a href=\"#\" class=\"btn btn-default\">Gas</a>\n        </div>\n        <div class=\"col-md-4 pitstopButton\">\n            <p>Look at the details of your options.</p>\n            <a href=\"/pitstops.html\" class=\"btn btn-lg btn-info\">Pitstops</a>\n        </div>\n    </div>\n    <div class=\"row\">\n        <div class=\"col-md-12 mapInfoContainer\">\n            <div id=\"map_canvas\">\n\n            </div>\n        </div>\n    </div>\n</div>\n<!-- end .mapContainer -->\n<footer class=\"container\">\n    <small>All Rights Reserved &copy; 2014</small>\n</footer>";
+  return "<div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">\n    <div class=\"container\">\n        <div class=\"navbar-header\">\n            <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">\n                <span class=\"sr-only\">Toggle navigation</span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n                <span class=\"icon-bar\"></span>\n            </button>\n            <a class=\"navbar-brand\" href=\"#\">Jrney</a>\n        </div>\n        <div class=\"collapse navbar-collapse\">\n            <form class=\"form-inline navForm\" role=\"form\">\n                <div class=\"form-group\">\n                    <label for=\"startingSelect\" class=\"col-sm-3 control-label\">Origin</label>\n                    <div class=\"col-sm-8\">\n                        <input id=\"startInput\" type=\"text\" name=\"startPoint\" value=\"\" placeholder=\"start point\">\n                    </div>\n                </div>\n                <div class=\"form-group\">\n                    <label for=\"endingSelect\" class=\"col-sm-3 control-label\">Finish</label>\n                    <div class=\"col-sm-8\">\n                        <input id=\"endInput\" type=\"text\" name=\"endPoint\" value=\"\" placeholder=\"end point\">\n                    </div>\n                </div>\n                <button id=\"embarkDirection\" type=\"button\" class=\"btn btn-primary\">Embark</button>\n            </form>\n<!-- end .navForm -->\n        </div><!--/.nav-collapse -->\n    </div>\n</div>\n<!-- end .navbar -->\n<div class=\"mapContainer container\">\n    <div class=\"pageHeader\">\n        <h1>Along the Way Project brought to you by Jrney</h1>\n        <h2 class=\"lead\">The jrney is what is important.<br> Not the destination.</h2>\n    </div>\n    <div class=\"row\">\n        <div class=\"col-md-8 categoryButtons\">\n            <p><b>Filter by:</b></p>\n            <a id=\"storesButton\" class=\"btn btn-primary\">Stores</a>\n            <a id=\"foodButton\" class=\"btn btn-default\">Food</a>\n            <a id=\"clothesButton\" class=\"btn btn-default\">Clothes</a>\n            <a id=\"gasButton\" class=\"btn btn-default\">Gas</a>\n        </div>\n        <div class=\"col-md-4 pitstopButton\">\n            <p>Look at the details of your options.</p>\n            <a href=\"/pitstops.html\" class=\"btn btn-lg btn-info\">Pitstops</a>\n        </div>\n    </div>\n    <div class=\"row\">\n        <div class=\"col-md-12 mapInfoContainer\">\n            <div id=\"map_canvas\">\n\n            </div>\n        </div>\n    </div>\n</div>\n<!-- end .mapContainer -->\n<footer class=\"container\">\n    <small>All Rights Reserved &copy; 2014</small>\n</footer>";
   });
 return t;
 });
@@ -24873,7 +24873,21 @@ define('app/views/mapView',[
         }, // end initialize
 
         events: {
-            "click #embarkDirection": "getNewRoute"
+            "click #embarkDirection": function(){
+                this.getNewRoute();
+            },
+            "click #storesButton" : function(){
+                this.render('store');
+            },            
+            "click #foodButton" : function(){
+                this.render('food');
+            },
+            "click #clothesButton" : function(){
+                this.render('clothing_store');
+            },            
+            "click #gasButton" : function(){
+                this.render('gas_station');
+            }            
         }, // end events
 
         getNewRoute: function() {
@@ -24889,12 +24903,20 @@ define('app/views/mapView',[
             return this;
         }, // end getNewRoute
 
-        route: function(myMap) {
+        route: function(myMap, type) {
             var that = this;
             var directionService = new google.maps.DirectionsService();
             var directionsRenderer = new google.maps.DirectionsRenderer({
                 map: myMap
             });
+            console.log('type: '+ type);
+            var searchType;
+            if(type != null){
+                 searchType = type;
+            } else {
+                 searchType = 'taco';
+            }
+            //searchType = 'food';
 
             window.console.log(this.model.toJSON());
             directionService.route(this.model.toJSON(), function(result, status) {
@@ -24912,7 +24934,7 @@ define('app/views/mapView',[
                     that.drawBoxes(myMap, boxes, boxpolys);
                     // get places from boxes 
                     window.console.log("about to get places");
-                    that.getPlaces(myMap, boxes);
+                    that.getPlaces(myMap, boxes, searchType);
 
                 }
             });
@@ -24930,7 +24952,7 @@ define('app/views/mapView',[
         drawBoxes: function(myMap, boxes, boxpolys) {
             window.console.log("i'm in drawBoxes");
             for (var i = 0; i < boxes.length; i++) {
-                console.log('Building box ' + i + ' from bounds');
+               // console.log('Building box ' + i + ' from bounds');
                 boxpolys[i] = new google.maps.Rectangle({
                     bounds: boxes[i],
                     fillOpacity: 0,
@@ -24944,15 +24966,23 @@ define('app/views/mapView',[
             }
 
         }, //get places from boxes areas
-        getPlaces: function(myMap, boxes){
+        getPlaces: function(myMap, boxes, type){
             var that = this;
             window.console.log("i'm in getPlaces");
             var service = new google.maps.places.PlacesService(myMap);
-            for(var i = 0; i < boxes.length; i++){      
+            var searchType;
+            if(type != null){
+                 searchType = type;
+            } else {
+                 searchType = 'food';
+            }
+            //searchType = 'food';
+            for(var i = 0; i < boxes.length; i++){  
+            console.log('searchType: '+ searchType);  
                 var request = {
                     bounds: boxes[i],
                     radius: '5',
-                    types: ['store']
+                    types: [searchType]
                 };
 
                 service.nearbySearch(request, callback);
@@ -24986,17 +25016,17 @@ define('app/views/mapView',[
 
                          });
                         placeMarkers.push(marker);
-                        console.log('placeMarkers ' + j + ': ' + Object.getOwnPropertyNames(placeMarkers[j]));
+                        //console.log('placeMarkers ' + j + ': ' + Object.getOwnPropertyNames(placeMarkers[j]));
                         /*  
                         *   placeMarkers props: gm_accessors_,position,
                         *   gm_bindings_,title,animation,clickable,
                         *   visible
                         */
-
-                        /*placeInfoWindows props: gm_accessors_,content,gm_bindings_*/
                         marker.setMap(myMap);
                     }
 
+                    /* On click, make an info window with the name of the location
+                    */
                     for(var k = 0; k < results.length; k += 1 ){
                         google.maps.event.addListener(placeMarkers[k], 'click', function(){
                             console.dir(this);
@@ -25006,15 +25036,6 @@ define('app/views/mapView',[
                             that.showInfo(this, infowindow, myMap);
                         });                  
                     }
-/*                      var k=0;     
-                        google.maps.event.addListener(placeMarkers[k], 'click', function(){
-                                that.showInfo(placeMarkers[k], placeInfoWindows[k], myMap);
-                        });
-
-                        var l=1;     
-                        google.maps.event.addListener(placeMarkers[l], 'click', function(){
-                                that.showInfo(placeMarkers[l], placeInfoWindows[l], myMap);
-                        });*/
                 
             }
 
@@ -25032,18 +25053,26 @@ define('app/views/mapView',[
             }
             boxpolys = null;
         },*/
-        render: function() {
+        render: function(type) {
             //this.remove();
-            var options = {
-                center: new google.maps.LatLng(47.620467, -122.349116),
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                zoom: 16,
-                scrollwheel: false
-            };
+            if(!myMap){
+                var options = {
+                    //center: new google.maps.LatLng(47.620467, -122.349116),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    zoom: 16,
+                    scrollwheel: false
+                };
+                var myMap = new google.maps.Map($("#map_canvas")[0], options);
+            }
 
-            var myMap = new google.maps.Map($("#map_canvas")[0], options);
+            if(type != null){
+                 searchType = type;
+            } else {
+                 searchType = 'store';
+            }
+
             if (this.model.get("origin") && this.model.get("destination")) {
-                this.route(myMap);
+                this.route(myMap,searchType);
             }
 
             return myMap;

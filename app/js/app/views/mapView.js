@@ -28,7 +28,21 @@ define([
         }, // end initialize
 
         events: {
-            "click #embarkDirection": "getNewRoute"
+            "click #embarkDirection": function(){
+                this.getNewRoute();
+            },
+            "click #storesButton" : function(){
+                this.render('store');
+            },            
+            "click #foodButton" : function(){
+                this.render('food');
+            },
+            "click #clothesButton" : function(){
+                this.render('clothing_store');
+            },            
+            "click #gasButton" : function(){
+                this.render('gas_station');
+            }            
         }, // end events
 
         getNewRoute: function() {
@@ -44,12 +58,20 @@ define([
             return this;
         }, // end getNewRoute
 
-        route: function(myMap) {
+        route: function(myMap, type) {
             var that = this;
             var directionService = new google.maps.DirectionsService();
             var directionsRenderer = new google.maps.DirectionsRenderer({
                 map: myMap
             });
+            console.log('type: '+ type);
+            var searchType;
+            if(type != null){
+                 searchType = type;
+            } else {
+                 searchType = 'taco';
+            }
+            //searchType = 'food';
 
             window.console.log(this.model.toJSON());
             directionService.route(this.model.toJSON(), function(result, status) {
@@ -67,7 +89,7 @@ define([
                     that.drawBoxes(myMap, boxes, boxpolys);
                     // get places from boxes 
                     window.console.log("about to get places");
-                    that.getPlaces(myMap, boxes);
+                    that.getPlaces(myMap, boxes, searchType);
 
                 }
             });
@@ -85,7 +107,7 @@ define([
         drawBoxes: function(myMap, boxes, boxpolys) {
             window.console.log("i'm in drawBoxes");
             for (var i = 0; i < boxes.length; i++) {
-                console.log('Building box ' + i + ' from bounds');
+               // console.log('Building box ' + i + ' from bounds');
                 boxpolys[i] = new google.maps.Rectangle({
                     bounds: boxes[i],
                     fillOpacity: 0,
@@ -99,15 +121,23 @@ define([
             }
 
         }, //get places from boxes areas
-        getPlaces: function(myMap, boxes){
+        getPlaces: function(myMap, boxes, type){
             var that = this;
             window.console.log("i'm in getPlaces");
             var service = new google.maps.places.PlacesService(myMap);
-            for(var i = 0; i < boxes.length; i++){      
+            var searchType;
+            if(type != null){
+                 searchType = type;
+            } else {
+                 searchType = 'food';
+            }
+            //searchType = 'food';
+            for(var i = 0; i < boxes.length; i++){  
+            console.log('searchType: '+ searchType);  
                 var request = {
                     bounds: boxes[i],
                     radius: '5',
-                    types: ['store']
+                    types: [searchType]
                 };
 
                 service.nearbySearch(request, callback);
@@ -141,7 +171,7 @@ define([
 
                          });
                         placeMarkers.push(marker);
-                        console.log('placeMarkers ' + j + ': ' + Object.getOwnPropertyNames(placeMarkers[j]));
+                        //console.log('placeMarkers ' + j + ': ' + Object.getOwnPropertyNames(placeMarkers[j]));
                         /*  
                         *   placeMarkers props: gm_accessors_,position,
                         *   gm_bindings_,title,animation,clickable,
@@ -178,18 +208,26 @@ define([
             }
             boxpolys = null;
         },*/
-        render: function() {
+        render: function(type) {
             //this.remove();
-            var options = {
-                center: new google.maps.LatLng(47.620467, -122.349116),
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                zoom: 16,
-                scrollwheel: false
-            };
+            if(!myMap){
+                var options = {
+                    //center: new google.maps.LatLng(47.620467, -122.349116),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    zoom: 16,
+                    scrollwheel: false
+                };
+                var myMap = new google.maps.Map($("#map_canvas")[0], options);
+            }
 
-            var myMap = new google.maps.Map($("#map_canvas")[0], options);
+            if(type != null){
+                 searchType = type;
+            } else {
+                 searchType = 'store';
+            }
+
             if (this.model.get("origin") && this.model.get("destination")) {
-                this.route(myMap);
+                this.route(myMap,searchType);
             }
 
             return myMap;
